@@ -1,0 +1,5 @@
+torouter (0.0.1-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Jacob Appelbaum <jacob@appelbaum.net>  Wed, 27 Jul 2011 10:08:02 -0400

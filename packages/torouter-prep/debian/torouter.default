@@ -1,0 +1,11 @@
+# Defaults for torouter initscript
+# sourced by /etc/init.d/torouter
+# installed at /etc/default/torouter by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# When the package is configured - we set this accordingly
+#DREAMPLUG=""
+#CONFIGURED=""

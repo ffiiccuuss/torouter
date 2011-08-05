@@ -1,0 +1,14 @@
+Source: torouter-prep
+Section: unknown
+Priority: extra
+Maintainer: Jacob Appelbaum <jacob@torproject.org>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.9.1
+Homepage: <https://www.torproject.org/>
+
+Package: torouter
+Architecture: all
+Depends: ${misc:Depends}, apt-utils, openssh-server, isc-dhcp-client, cron-apt
+Description: Torouter meta-package to take over the DreamPlug
+ DreamPlug devices may use this package to convert to a Torouter.
+ This package only works if the DreamPlug is already running Debian.

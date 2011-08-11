@@ -10,6 +10,7 @@ from tui.utils import session
 from view import render
 
 
+# This is the main structure of URLs
 urls = (
     '/', 'tui.controllers.main.index',
 #    '/config/(tor|router)', 'tui.controllers.main.config',
@@ -26,6 +27,7 @@ urls = (
 
 if __name__ == "__main__":
   app = web.application(urls, globals())
+  # Add session management to the app
   session.add_session_to_app(app)
   app.internalerror = web.debugerror
   app.run()

@@ -8,5 +8,6 @@ cache = False
 
 globals = {}
 
+# Add your own (username, password) pair
 authinfo = ("test", "test")
 

@@ -1,0 +1,29 @@
+
+/* Clear all */
+body { margin: 0;border: 0;padding: 0; }
+
+div.wrapper {
+  width: 800px;
+  margin: 0 auto;
+}
+
+div.footer {
+  background-color: #CCC;
+  color: white;
+}
+
+div.header {
+  color: white;
+}
+
+div.header ul {
+  list-style: none;
+  height: 20px;
+}
+
+div.header ul li {
+  float: left;
+  padding: 5px 10px;
+}
+
+

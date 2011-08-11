@@ -5,38 +5,10 @@ $def with (page,submenu=None)
 <html>
 <head>
   <title>TUI - Tor Web User Interface</title>
-  <style type="text/css">
-    body {
-      margin: 0;
-      border: 0;
-      padding: 0;
-
-    }
-
-    div.wrapper {
-      width: 800px;
-      margin: 0 auto;
-    }
-    
-    div.footer {
-      background-color: #CCC;
-      color: white;
-    }
-    
-    div.header {
-      background-color: #CCC;
-      color: white;
-    }
-
-    ul#menu {
-      list-style: none;
-
-    }
-
-  </style>
+  <link REL="stylesheet" href="/static/main.css" type="text/css">
 </head>
 <body>
-<div id="header">
+<div class="header">
   <ul id="menu">
     <li><a href="/">Home</a></li>
     <li><a href="/network">Network</a></li>

@@ -1,0 +1,12 @@
+$def with (wiz_form, text, step, next_step)
+
+<h1>Step number $step</h1>
+
+$text
+
+<form action="/wizard/$next_step" method="POST">
+$:wiz_form.render()
+
+</form>
+
+<!-- a href=/wizard/$next_step>Next ($next_step)</a-->

@@ -8,4 +8,5 @@ cache = False
 
 globals = {}
 
+authinfo = ("test", "test")
 

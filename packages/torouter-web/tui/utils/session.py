@@ -1,4 +1,5 @@
 import web
+import config
 
 # The main session class
   
@@ -15,7 +16,7 @@ def is_logged():
   return web.config._session.login
 
 def check_login(data):
-  if (data.user == "test") and (data.password == "test"):
+  if (data.user == config.authinfo[0]) and (data.password == config.authinfo[1]):
     web.config._session.login = 1
     return 0
   return 1

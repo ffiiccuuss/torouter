@@ -19,3 +19,8 @@ class index:
     else:
       return render.base(render.login())
 
+class logout:
+  def GET(self):
+    session.logout()
+    return render.base(render.logout())
+

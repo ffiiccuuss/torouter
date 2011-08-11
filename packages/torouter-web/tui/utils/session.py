@@ -21,3 +21,6 @@ def check_login(data):
     return 0
   return 1
 
+def logout():
+  web.config._session.kill()
+

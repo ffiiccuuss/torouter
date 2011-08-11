@@ -1,6 +1,7 @@
 import web
 import view, config
 from view import render
+from tui.utils import session
 
 """
 The main Tor status page

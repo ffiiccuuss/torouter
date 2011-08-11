@@ -6,7 +6,9 @@ import web
 import config
 import tui.controllers
 
+from tui.utils import session
 from view import render
+
 
 urls = (
     '/', 'tui.controllers.main.index',
@@ -24,6 +26,7 @@ urls = (
 
 if __name__ == "__main__":
   app = web.application(urls, globals())
+  session.add_session_to_app(app)
   app.internalerror = web.debugerror
   app.run()
 

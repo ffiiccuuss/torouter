@@ -1,6 +1,7 @@
 import web
 import view, config
 from view import render
+from tui.utils import session
 
 """
 This function is used to generate the network
@@ -28,20 +29,34 @@ The main page for network configuration
 """
 class main:
   def GET(self):
-    return render.base(render.main(),menu(0))
+    if session.is_logged() > 0:
+      return render.base(render.main(),menu(0))
+    else:
+      return render.base(render.login())
 
   def POST(self):
-    return render.base(render.main(),menu(0))
+    if session.is_logged() > 0:
+      return render.base(render.main(),menu(0))
+    else:
+      return render.base(render.login())
 
 """
 The firewall configuration page
 """
 class firewall:
   def GET(self):
-    return render.base(render.firewall(),menu(1))
+    if session.is_logged() > 0:
+      return render.base(render.main(),menu(0))
+    else:
+      return render.base(render.login())
 
   def POST(self):
-    return render.base(render.firewall(),menu(1))
+    if session.is_logged() > 0:
+      return render.base(render.firewall(),menu(1))
+    else:
+      return render.base(render.login())
+  
+
 
 """
 Wireless network configuration page
@@ -78,23 +93,35 @@ class wireless:
     return True
 
   def GET(self):
-    if self.build_form():
-      return render.base(render.wireless(self.form()),menu(2))
+    if session.is_logged() > 0:
+      if self.build_form():
+        return render.base(render.wireless(self.form()),menu(2))
+    else:
+      return render.base(render.login())
 
   def POST(self):
-    self.update_config(None)
-    print web.input()
-    return render.base(render.saved(web.input()),menu(2))
+    if session.is_logged() > 0:
+      self.update_config(None)
+      print web.input()
+      return render.base(render.saved(web.input()),menu(2))
+    else:
+      return render.base(render.login())
 
 """
 Wired network configuration page
 """
 class wired:
   def GET(self):
-    return render.base(render.wired(),menu(3))
+    if session.is_logged() > 0:
+      return render.base(render.wired(),menu(3))
+    else:
+      return render.base(render.login())
 
   def POST(self):
-    return render.base(render.wired(),menu(3))
+    if session.is_logged() > 0:
+      return render.base(render.wired(),menu(3))
+    else:
+      return render.base(render.login())
 
 """
 General status page, displays a bit more detail than main

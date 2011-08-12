@@ -17,9 +17,13 @@ class status:
 Tor configuration page
 """
 class config:
+  def update_config(self, data):
+    return True
+
   def GET(self):
     return render.base(render.torconfig())
 
   def POST(self):
+    self.update_config(web.input())
     return render.base(render.torconfig())
 

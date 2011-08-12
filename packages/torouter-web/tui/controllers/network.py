@@ -28,6 +28,10 @@ def menu(n):
 The main page for network configuration
 """
 class main:
+  # XXX do all the backend stuff
+  def update_config(self, data):
+    return True
+
   def GET(self):
     if session.is_logged() > 0:
       return render.base(render.main(),menu(0))
@@ -36,6 +40,7 @@ class main:
 
   def POST(self):
     if session.is_logged() > 0:
+      self.update_config(web.input())
       return render.base(render.main(),menu(0))
     else:
       return render.base(render.login())
@@ -44,6 +49,10 @@ class main:
 The firewall configuration page
 """
 class firewall:
+  # XXX do all the backend stuff 
+  def update_config(self, data):
+    return True
+
   def GET(self):
     if session.is_logged() > 0:
       return render.base(render.main(),menu(0))
@@ -52,6 +61,7 @@ class firewall:
 
   def POST(self):
     if session.is_logged() > 0:
+      self.update_config(web.input())
       return render.base(render.firewall(),menu(1))
     else:
       return render.base(render.login())
@@ -89,6 +99,7 @@ class wireless:
     
     return True
   
+  # XXX do all the backend stuff
   def update_config(self, data):
     return True
 
@@ -101,7 +112,7 @@ class wireless:
 
   def POST(self):
     if session.is_logged() > 0:
-      self.update_config(None)
+      self.update_config(web.input())
       print web.input()
       return render.base(render.saved(web.input()),menu(2))
     else:
@@ -111,6 +122,10 @@ class wireless:
 Wired network configuration page
 """
 class wired:
+  # XXX do all the backend stuff
+  def update_config(self, data):
+    return True
+
   def GET(self):
     if session.is_logged() > 0:
       return render.base(render.wired(),menu(3))
@@ -119,6 +134,7 @@ class wired:
 
   def POST(self):
     if session.is_logged() > 0:
+      self.update_config(web.input())
       return render.base(render.wired(),menu(3))
     else:
       return render.base(render.login())

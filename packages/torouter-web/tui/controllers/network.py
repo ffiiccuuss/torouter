@@ -1,7 +1,7 @@
 import web
 import view, config
 from view import render
-from tui.utils import session
+from tui.utils import session,configuration
 
 """
 This function is used to generate the network
@@ -55,7 +55,7 @@ class firewall:
 
   def GET(self):
     if session.is_logged() > 0:
-      return render.base(render.main(),menu(0))
+      return render.base(render.firewall(configuration.get_form("firewall")),menu(0))
     else:
       return render.base(render.login())
 
@@ -72,41 +72,13 @@ class firewall:
 Wireless network configuration page
 """
 class wireless:
-  def get_current_config(self):
-    conf = {'essid' : None, 'encryption' : None, 'key' : None}
-    
-    # XXX Dummy default config for testing purposes
-    #     plugin here the actual code for config retreival
-    conf['essid'] = "Torouter"
-    conf['encryption'] = "WPA2"
-    conf['key'] = "ljdasjkbcuBH12389Ba"
-    
-
-    return conf
-
-  def build_form(self):
-    c = self.get_current_config()
-    ret_form = web.form.Form(
-      web.form.Textbox(name='essid', 
-        description='Wireless ESSID', value=c['essid']),
-      web.form.Dropdown(name='enctype', args=['WPA2', 'WPA', 'WEP (not reccomended)', 'open'],
-        description='Wireless encryption scheme', value=c['encryption']),
-      web.form.Password(name='key',
-        description='key', value=c['key']),
-      web.form.Button('save')
-    )
-    self.form = ret_form
-    
-    return True
-  
   # XXX do all the backend stuff
   def update_config(self, data):
     return True
 
   def GET(self):
     if session.is_logged() > 0:
-      if self.build_form():
-        return render.base(render.wireless(self.form()),menu(2))
+      return render.base(render.wireless(configuration.get_form("wireless")),menu(2))
     else:
       return render.base(render.login())
 
@@ -128,7 +100,7 @@ class wired:
 
   def GET(self):
     if session.is_logged() > 0:
-      return render.base(render.wired(),menu(3))
+      return render.base(render.wired(configuration.get_form("wired")),menu(3))
     else:
       return render.base(render.login())
 

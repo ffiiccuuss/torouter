@@ -1,0 +1,38 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet dhcp
+	post-up ifup uap0
+	post-down ifdown uap0
+
+auto eth1
+iface eth1 inet static
+	address 10.23.42.1
+	netmask 255.255.255.0
+	network 10.23.42.0
+	broadcast 10.23.42.255
+	post-up echo 1 > /proc/sys/net/ipv4/ip_forward
+        # this must happen after have brought up uap0 because it clears the nat tables
+        post-up iptables -t nat -A POSTROUTING -s 10.23.42.0/24 -o eth0 -j MASQUERADE
+	post-up /etc/init.d/dnsmasq restart
+
+# The magic Tor wireless network
+iface uap0 inet static
+        address 172.16.23.1
+	netmask 255.255.255.0
+	network 172.16.23.0
+	broadcast 172.16.23.255
+        pre-up ifconfig uap0 hw ether 00:66:66:66:66:66
+        post-up /etc/init.d/tor reload
+        #post-up /etc/init.d/udhcpd restart
+        post-up /etc/init.d/dnsmasq restart
+        post-up /root/tor-wireless-firewall.sh
+	post-up /root/uaputl/uaputl sys_cfg_ssid "torproject" 
+	post-up /root/uaputl/uaputl bss_start 
+        pre-down /root/uaputl/uaputl bss_stop

@@ -15,7 +15,7 @@ def menu(n):
     else:
       a.append("")
   print a
-  return """<ul>
+  return """<ul id="submenu">
   <li><a href="/network" class="%s">Main</a></li>
   <li><a href="/network/firewall" class="%s">Firewall</a></li>
   <li><a href="/network/wireless" class="%s">Wireless</a></li>

@@ -50,3 +50,6 @@ clean:
 	$(ECHO)$(RM) $(OBJECTS) $(TARGET)
 	$(ECHO)$(RM) tags.txt 
 
+# We add this install target to allow for installation
+install:
+	install $(TARGET) $(DESTDIR)/usr/bin/$(TARGET)

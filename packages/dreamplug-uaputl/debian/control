@@ -1,0 +1,15 @@
+Source: dreamplug-uaputl
+Section: net
+Priority: extra
+Maintainer: Jacob Appelbaum <jacob@appelbaum.net>
+Build-Depends: debhelper (>= 7.0.50~)
+Standards-Version: 3.9.1
+Homepage: https://www.torproject.org/
+
+Package: dreamplug-uaputl
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: controls the DreamPlug Marvell wifi chipset
+ This is required to control the Marvell wifi card that ships with the
+ DreamPlug. The DreamPlug wireless card does not use the standard linux
+ wireless tools and thus requires this painfully bad software.

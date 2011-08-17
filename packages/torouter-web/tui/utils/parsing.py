@@ -1,6 +1,8 @@
 # These functions are for parsing /etc/network/interface
 # files, they will be used inside torouter to visualize
 # and edit configuration
+import os
+
 class interfaces:
   def __init__(self,filename):
     self.fp = open(filename, "r")
@@ -47,6 +49,20 @@ class interfaces:
       if iface:
         self.parse_line(line, iface)
 
+  def html_output(self, data):
+    output = "<h3>Interface %s</h3>\n" % data['iface'].split(" ")[0]
+    output += "<table class=\"interface\" id=\"%s\">\n" % data['iface'].split(" ")[0]
+    
+    for item in data.items():
+      if item[0] != "iface":
+        if type(item[1]) is list:
+          for i in item[1]:
+            output += "<tr><td>%s</td><td>%s</td></tr>\n" % (item[0], i)
+        else:
+          output += "<tr><td>%s</td><td>%s</td></tr>\n" % (item[0],item[1])
+    output += "</table>"
+    print output
+    return output 
 
   def output(self, data):
     print "iface %s" % data['iface']
@@ -58,9 +74,10 @@ class interfaces:
         else:
           print "%s %s" % (item[0],item[1])
 
-itfc = interfaces("/tmp/interfaces")
-itfc.parse()
-itfc.output(itfc.wifi)
-itfc.output(itfc.eth1)
-itfc.output(itfc.eth0)
+#interfaces_file = os.getcwd() + "/../../../torouter-prep/configs/interfaces"
+#itfc = interfaces(interfaces_file)
+#itfc.parse()
+#itfc.html_output(itfc.wifi)
+#itfc.html_output(itfc.eth1)
+#itfc.html_output(itfc.eth0)
   

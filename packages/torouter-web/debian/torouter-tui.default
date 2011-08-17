@@ -1,0 +1,10 @@
+# Defaults for torouter-web initscript
+# sourced by /etc/init.d/torouter-web
+# installed at /etc/default/torouter-web by the maintainer scripts
+
+#
+# This is a POSIX shell fragment
+#
+
+# When the package is configured - we set this accordingly
+# ARGS=""

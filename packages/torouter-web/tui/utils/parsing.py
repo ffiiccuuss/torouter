@@ -74,6 +74,27 @@ class interfaces:
         else:
           print "%s %s" % (item[0],item[1])
 
+class torrc:
+  def __init__(self,filename):
+    self.fp = open(filename, "r")
+    self.parsed = []
+
+  def parse(self):
+    for line in self.fp.readlines():
+      if line.startswith("#") or line == "":
+        continue
+      else:
+        self.parsed.append(line)
+
+  def html_output(self):
+    output = "<ul id=\"torrc\">"
+    for line in self.parsed:
+      if line != "\n":
+        output += "<li><em>%s</em> %s</li>" % (line.split(" ")[0], " ".join(line.split(" ")[1:]))
+    output += "</ul>"
+    print output
+    return output
+
 #interfaces_file = os.getcwd() + "/../../../torouter-prep/configs/interfaces"
 #itfc = interfaces(interfaces_file)
 #itfc.parse()

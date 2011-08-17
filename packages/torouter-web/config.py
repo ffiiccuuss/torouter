@@ -12,4 +12,5 @@ globals = {}
 authinfo = ("test", "test")
 
 interfaces_file = os.getcwd() + "/../torouter-prep/configs/interfaces"
+torrc_file = os.getcwd() + "/../torouter-prep/configs/torrc"
 

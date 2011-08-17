@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 7.0.50~)
 Standards-Version: 3.9.1
 Homepage: <https://www.torproject.org/>
 
-Package: torouter
+Package: torouter-tui
 Architecture: all
 Depends: ${misc:Depends}, python, python-webpy
 Description: Torouter web UI

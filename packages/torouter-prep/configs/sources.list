@@ -1,0 +1,14 @@
+deb http://ftp.de.debian.org/pub/debian/ squeeze main non-free contrib
+deb-src http://ftp.de.debian.org/pub/debian/ squeeze main non-free contrib
+deb http://security.debian.org/ squeeze/updates main
+
+# experimental for natpmp
+deb http://ftp.debian.org/debian experimental main
+deb-src http://ftp.debian.org/debian experimental main
+
+# backports for upnp
+deb http://backports.debian.org/debian-backports squeeze-backports main
+
+# Tor project repo
+deb http://deb.torproject.org/torproject.org/ squeeze main
+deb-src http://deb.torproject.org/torproject.org squeeze main

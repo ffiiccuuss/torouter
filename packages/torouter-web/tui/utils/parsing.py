@@ -81,6 +81,7 @@ class torrc:
 
   def parse(self):
     for line in self.fp.readlines():
+      line = line.lstrip()
       if line.startswith("#") or line == "":
         continue
       else:

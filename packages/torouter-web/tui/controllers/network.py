@@ -1,7 +1,7 @@
 import web
 import view, config
 from view import render
-from tui.utils import session,configuration
+from tui.utils import session,configuration,parsing
 
 """
 This function is used to generate the network
@@ -116,8 +116,14 @@ General status page, displays a bit more detail than main
 """
 class status:
   def GET(self):
-    return render.base(render.status(),menu(4))
+    itfc = parsing.interfaces(config.interfaces_file)
+    itfc.parse()
+    network = itfc.html_output(itfc.wifi) + itfc.html_output(itfc.eth0) + itfc.html_output(itfc.eth1)
+    return render.base(render.status(network),menu(4))
 
   def POST(self):
+    itfc = parsing.interfaces(config.interfaces_file)
+    itfc.parse()
+    network = itfc.html_output(itfc.wifi) + itfc.html_output(itfc.eth0) + itfc.html_output(itfc.eth1)
     return render.base(render.status(),menu(4))
  

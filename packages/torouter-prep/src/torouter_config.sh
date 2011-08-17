@@ -6,6 +6,7 @@ echo "This is where we'd take over the entire Torouter system"
 
 # For every file we touch, move it to the temp_dir and then tar it up in the end
 temp_dir="`mktemp -d`"
+config_dir="/usr/share/doc/torouter-prep/example-configs/"
 
 # Add a user
 ADMINUSER="toradmin"
@@ -23,7 +24,7 @@ EOF
 
 cp /etc/hostname $temp_dir/
 # Set us to have a default host name
-echo "torouter" > /etc/hostname
+cp /usr/share/doc/
 
 # We need to prep apt to understand that we want packages from other repos
 # We append to the current package list

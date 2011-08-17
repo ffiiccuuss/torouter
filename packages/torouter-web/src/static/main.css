@@ -35,3 +35,17 @@ div.header ul#submenu li {
   font-size: 15px;
 }
 
+/* More specific stuff */
+#torrc {
+list-style: none;
+line-height: 2em;
+}
+
+#torrc em {
+font-weight: bold;
+font-style: normal;
+}
+
+
+
+

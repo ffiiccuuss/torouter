@@ -20,7 +20,7 @@ urls = (
     '/network/wired', 'tui.controllers.network.wired',
     '/network/status', 'tui.controllers.network.status',
     '/tor', 'tui.controllers.tor.status',
-    '/tor/config', 'tui.controllers.tor.config',
+    '/tor/config', 'tui.controllers.tor.torrc',
     '/logout', 'tui.controllers.main.logout'
     )
 #    '/wizard/([0-9a-f]{1,2})?', 'tui.controllers.wizard.step',

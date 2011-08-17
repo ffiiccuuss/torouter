@@ -1,22 +1,28 @@
 import web
 import view, config
 from view import render
-from tui.utils import session
+from tui.utils import session, parsing
 
 """
 The main Tor status page
 """
 class status:
   def GET(self):
-    return render.base(render.torstatus())
+    trc = parsing.torrc(config.torrc_file)
+    trc.parse()
+    output = trc.html_output()
+    return render.base(render.torstatus(output,config.torrc_file))
 
   def POST(self):
-    return render.base(render.torstatus())
+    trc = parsing.torrc(config.torrc_file)
+    trc.parse()
+    output = trc.html_output()
+    return render.base(render.torstatus(output,config.torrc_file))
 
 """
 Tor configuration page
 """
-class config:
+class torrc:
   def update_config(self, data):
     return True
 

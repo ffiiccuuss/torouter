@@ -35,6 +35,11 @@ div.header ul#submenu li {
   font-size: 15px;
 }
 
+div.header ul#submenu li a.sel {
+  color: black;
+  text-decoration: none;
+}
+
 /* More specific stuff */
 #torrc {
 list-style: none;

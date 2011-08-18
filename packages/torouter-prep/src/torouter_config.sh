@@ -79,7 +79,7 @@ apt-get -y install dnsmasq
 ##
 
 # Configure arm
-zcat $config_dir/armrc.sample.gz > ~$(ADMINUSER)/.armrc
+zcat $config_dir/armrc.sample.gz > ~$ADMINUSER/.armrc
 
 # Reconfigure /etc/inittab here
 cp $config_dir/inittab /etc/inittab

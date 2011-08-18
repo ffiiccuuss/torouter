@@ -2,13 +2,11 @@
 
 export VERSION="0.1"
 
-echo "This program will reconfigure your Debian system into a Torouter"
-exit 0
-echo "This is where we'd take over the entire Torouter system"
+echo "This program will now reconfigure your Debian system into a Torouter"
 
 # For every file we touch, move it to the temp_dir and then tar it up in the end
 export temp_dir="`mktemp -d`"
-export config_dir="/usr/share/doc/torouter-prep/example-configs/"
+export config_dir="/usr/share/torouter-prep/example-configs/"
 
 # Add a user to administrate the Torouter later
 export ADMINUSER="torouter"
@@ -21,11 +19,11 @@ useradd -g $ADMINGROUP -s /bin/bash $ADMINUSER
 # gpg --keyserver keys.gnupg.net --recv 886DDD89
 # gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
 # This is the main Tor repo apt pubkey
-apt-get add $config_dir/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.apt-key
+apt-key add $config_dir/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.apt-key
 
 # This is the temp torrouter archive pubkey; this should be updated when we
 # freeze this repo and know what we want to do
-apt-get add $config_dir/047E6A24.asc
+apt-key add $config_dir/047E6A24.asc
 
 # Set us to have a default host name and hosts file
 cp $config_dir/hostname /etc/hostname

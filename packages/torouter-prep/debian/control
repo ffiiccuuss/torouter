@@ -8,7 +8,7 @@ Homepage: <https://www.torproject.org/>
 
 Package: torouter-prep
 Architecture: all
-Depends: ${misc:Depends}, openssh-server, isc-dhcp-client, cron-apt
+Depends: ${misc:Depends}, openssh-server, isc-dhcp-client, cron-apt, torouter-tui
 Description: Torouter meta-package to take over the DreamPlug
  DreamPlug devices may use this package to convert to a Torouter.
  This package only works if the DreamPlug is already running Debian.

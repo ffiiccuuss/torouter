@@ -1,8 +1,0 @@
-The Debian Package dreamplug-uaputl
-----------------------------
-
-This source code was released by Marvell and is used to control the DreamPlug
-wireless driver; it has some horrible binary blob garbage involved in the
-process but not in this package.
-
- -- Jacob Appelbaum <jacob@appelbaum.net>  Wed, 17 Aug 2011 23:26:07 +0200

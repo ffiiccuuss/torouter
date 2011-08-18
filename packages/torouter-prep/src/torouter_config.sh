@@ -20,7 +20,12 @@ useradd -g $ADMINGROUP -s /bin/bash $ADMINUSER
 # Install the Tor repo key
 # gpg --keyserver keys.gnupg.net --recv 886DDD89
 # gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
+# This is the main Tor repo apt pubkey
 apt-get add $config_dir/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.apt-key
+
+# This is the temp torrouter archive pubkey; this should be updated when we
+# freeze this repo and know what we want to do
+apt-get add $config_dir/047E6A24.asc
 
 # Set us to have a default host name and hosts file
 cp $config_dir/hostname /etc/hostname

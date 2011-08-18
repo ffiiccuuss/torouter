@@ -36,6 +36,7 @@ cp $config_dir/sources.list /etc/apt/sources.list
 
 # We're creating this file to ensure we get updates
 cp $config_dir/apt-preferences.d-backports /etc/apt/preferences.d/backports
+cp $config_dir/apt.conf /etc/apt/apt.conf
 
 apt-get -y update
 

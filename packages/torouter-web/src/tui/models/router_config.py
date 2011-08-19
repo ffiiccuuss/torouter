@@ -1,5 +1,5 @@
 import web
-from config import db
+from tui.config import db
 
 def new_config(conf):
   db.insert('router_config', 

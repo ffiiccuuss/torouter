@@ -3,7 +3,7 @@
 #
 
 import web
-import config
+from tui import config
 import tui.controllers
 
 from tui.utils import session

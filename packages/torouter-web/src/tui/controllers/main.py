@@ -1,6 +1,7 @@
 import web
-import view, config
-from view import render
+from tui import config
+from tui import view
+from tui.view import render
 from tui.utils import session 
 
 """

@@ -1,5 +1,5 @@
 import web
-import config
+from tui import config
 
 def get(name):
   conf = {}

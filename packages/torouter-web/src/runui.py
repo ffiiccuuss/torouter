@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # tui - Tor web UI
 # by Arturo Filasto' <hellais@torproject.org>
 #

@@ -8,7 +8,7 @@ from tui import config
 import tui.controllers
 
 from tui.utils import session
-from view import render
+from tui.view import render
 
 
 # This is the main structure of URLs

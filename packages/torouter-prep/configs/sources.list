@@ -2,6 +2,9 @@ deb http://ftp.de.debian.org/pub/debian/ squeeze main non-free contrib
 deb-src http://ftp.de.debian.org/pub/debian/ squeeze main non-free contrib
 deb http://security.debian.org/ squeeze/updates main
 
+# Sid for uaputl
+deb http://ftp.debian.org/debian sid main
+
 # experimental for natpmp
 deb http://ftp.debian.org/debian experimental main
 deb-src http://ftp.debian.org/debian experimental main

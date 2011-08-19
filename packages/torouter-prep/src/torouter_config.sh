@@ -93,6 +93,7 @@ cp $config_dir/dnsmasq.conf /etc/dnsmasq.conf
 
 # Configure ntp
 cp $config_dir/ntp.conf /etc/ntp.conf
+cp $config_dir/openntpd-default /etc/default/openntpd
 
 # XXX We should configure ufw here
 # XXX We should configure denyhosts

@@ -16,5 +16,13 @@ deb http://backports.debian.org/debian-backports squeeze-backports main
 deb http://deb.torproject.org/torproject.org/ squeeze main
 deb-src http://deb.torproject.org/torproject.org squeeze main
 
+# Tor project experimental package repo
+deb     http://deb.torproject.org/torproject.org experimental-squeeze main
+deb-src http://deb.torproject.org/torproject.org experimental-squeeze main
+
+# Tor 0.2.3.x package repo
+deb     http://deb.torproject.org/torproject.org tor-0.2.3.x-squeeze main
+deb-src http://deb.torproject.org/torproject.org tor-0.2.3.x-squeeze main
+
 # Torouter project repo
 deb http://torrouter.torproject.org/torrouter torrouter main

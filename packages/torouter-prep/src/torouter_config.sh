@@ -1,60 +1,51 @@
 #!/bin/bash -x
 
-echo "This program will reconfigure your Debian system into a Torouter"
-exit 0
-echo "This is where we'd take over the entire Torouter system"
+export VERSION="0.1"
+
+echo "This program will now reconfigure your Debian system into a Torouter"
 
 # For every file we touch, move it to the temp_dir and then tar it up in the end
-temp_dir="`mktemp -d`"
-config_dir="/usr/share/doc/torouter-prep/example-configs/"
+export temp_dir="`mktemp -d`"
+export config_dir="/usr/share/torouter-prep/example-configs/"
 
-# Add a user
-ADMINUSER="toradmin"
-ADMINGROUP="toradmin"
+# Add a user to administrate the Torouter later
+export ADMINUSER="torouter"
+export ADMINGROUP="torouter"
+
+addgroup $ADMINGROUP
+useradd -g $ADMINGROUP -s /bin/bash $ADMINUSER
 
 # Install the Tor repo key
-gpg --keyserver keys.gnupg.net --recv 886DDD89
-gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
+# gpg --keyserver keys.gnupg.net --recv 886DDD89
+# gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
+# This is the main Tor repo apt pubkey
+apt-key add $config_dir/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.apt-key
 
-cp /etc/hosts $temp_dir/
-# Stomp on the hosts file
-cat << EOF > /etc/hosts
-127.0.0.1 localhost
-EOF
+# This is the temp torrouter archive pubkey; this should be updated when we
+# freeze this repo and know what we want to do
+apt-key add $config_dir/047E6A24.asc
 
-cp /etc/hostname $temp_dir/
-# Set us to have a default host name
-cp /usr/share/doc/
+# Set us to have a default host name and hosts file
+cp $config_dir/hostname /etc/hostname
+cp $config_dir/hosts /etc/hosts
 
 # We need to prep apt to understand that we want packages from other repos
-# We append to the current package list
-cat << EOF >> /etc/apt/sources.list
-# Tor's debian package repo:
-deb http://deb.torproject.org/torproject.org squeeze main
-deb http://deb.torproject.org/torproject.org experimental-squeeze main
-
-# Add Debian backports for OpenNTPD, libminiupnpc-dev, libminiupnpc5
-# http://packages.debian.org/squeeze-backports/libminiupnpc-dev
-deb http://backports.debian.org/debian-backports squeeze-backports main contrib non-free
-
-# Add Debian experimental for libnatpmp0
-# http://packages.debian.org/experimental/libnatpmp0
-deb http://ftp.debian.org/debian experimental main
-deb-src http://ftp.debian.org/debian experimental main
-
-EOF
+cp $config_dir/sources.list /etc/apt/sources.list
 
 # We're creating this file to ensure we get updates
-cat << 'EOF' > /etc/apt/preferences.d/backports
-Package: *
-Pin: release a=squeeze-backports
-Pin-Priority: 200
-EOF
+cp $config_dir/apt-preferences.d-backports /etc/apt/preferences.d/backports
+cp $config_dir/apt.conf /etc/apt/apt.conf
 
 apt-get -y update
 
+# Remove a bunch of stuff:
+apt-get -y remove exim4-base exim4-config exim4-daemon-light dbus
+
+# Install the weird wireless control for the DreamPlug
+apt-get install -y -t sid uaputl
+
 # Install some other packages here:
-apt-get -y install denyhosts ufw 
+apt-get -y install denyhosts ufw
 
 # Allow us to set the clock:
 apt-get -y -t squeeze-backports install openntpd
@@ -63,6 +54,7 @@ apt-get -y -t squeeze-backports install openntpd
 apt-get -y install tor tor-geoipdb
 
 # To build with natpmp support
+apt-get -y -t experimental install libnatpmp-dev
 apt-get -y -t experimental install libnatpmp0
 
 # To build with miniupnpc support
@@ -76,6 +68,9 @@ apt-get -y -t squeeze-backports install libminiupnpc5
 # Install a Tor controller:
 apt-get -y install tor-arm
 
+# Install the ttdnsd program:
+apt-get -y install ttdnsd
+
 # Install a normal dns cache for eth1
 apt-get -y install dnsmasq
 
@@ -84,65 +79,36 @@ apt-get -y install dnsmasq
 ##
 
 # Configure arm
-zcat /usr/share/doc/tor-arm/armrc.sample.gz > ~$(ADMINUSER)/.armrc
-# XXX This is where we will call torrc-takeover.py when it is packaged
+zcat $config_dir/armrc.sample.gz > ~$ADMINUSER/.armrc
 
-# XXX We should reconfigure /etc/inittab here
+# Reconfigure /etc/inittab here
+cp $config_dir/inittab /etc/inittab
 
 # Configure the network
 # eth0 is our "internet" interface with a dhcp client
-cat << 'EOF' >  /etc/network/interfaces
-# The primary network interface
-allow-hotplug eth0
-iface eth0 inet dhcp
+cp $config_dir/interfaces /etc/network/interfaces
 
-#
-# XXX Configure eth1 and ap0 here
-#
+# Configure dnsmasq
+cp $config_dir/dnsmasq.conf /etc/dnsmasq.conf
 
-EOF
+# Configure ntp
+cp $config_dir/ntp.conf /etc/ntp.conf
 
 # XXX We should configure ufw here
-# ufw allow 
 # XXX We should configure denyhosts
-# XXX We should configure dnsmasq
-# XXX We should configure the DHCP server here
 
-cp /etc/tor/torrc $temp_dir/
-# configure Tor and stomp on the current Tor config
-cat << 'EOF' > /etc/tor/torrc
-# Run Tor as a bridge/relay only, not as a client
-SocksPort 0
+cp $config_dir/torrc /etc/tor/torrc
+cp $config_dir/ttdnsd-default /etc/default/ttdnsd
 
-# What port to advertise for incoming Tor connections
-ORPort 443
+# Configure sshd
+cp $config_dir/sshd_config /etc/ssh/sshd_config
 
-# We're on a flash file system
-AvoidDiskWrites 1
+# Clean up our cache
+apt-get -y clean
 
-# Be a bridge
-BridgeRelay 1
-
-# Rate limited
-BandwidthRate 50KB
-
-# Don't allow any Tor traffic to exit
-Exitpolicy reject *:*
-
-# Allow a controller (tor-arm) on this system to configure Tor:
-ControlPort 9051
-ControlListenAddress 127.0.0.1:9051
-CookieAuthentication 1
-EOF
-
-# Remove a bunch of stuff:
-apt-get -y remove exim4-base exim4-config exim4-daemon-light dbus 
-
-## Disable ipv6 support
-cp /etc/sysctl.d/disableipv6.conf $temp_dir/
+## Disable ipv6 support for now
+cp $config_dir/modprobe.d-blacklist.conf /etc/modprobe.d/blacklist.conf
 echo net.ipv6.conf.all.disable_ipv6=1 > /etc/sysctl.d/disableipv6.conf
-cp /etc/sshd_config $temp_dir/
-echo "AddressFamily inet" >> /etc/ssh/ssh_config
 
 ##
 ## Restart services here
@@ -150,9 +116,10 @@ echo "AddressFamily inet" >> /etc/ssh/ssh_config
 
 /etc/init.d/ssh restart
 /etc/init.d/tor restart
+/etc/init.d/ttdnsd restart
 
 ##
 ## Touch a stamp to show that we're now a Torouter
 ##
 
-echo "torouter" > /etc/torouter
+echo "torouter $VERSION" > /etc/torouter

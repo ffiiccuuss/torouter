@@ -35,7 +35,7 @@ SocksListenAddress 127.0.0.1 # accept connections only from localhost
 ## Send all messages of level 'notice' or higher to /var/log/tor/notices.log
 Log notice file /var/log/tor/notices.log
 ## Send every possible message to /var/log/tor/debug.log
-Log debug file /var/log/tor/debug.log
+#Log debug file /var/log/tor/debug.log
 ## Use the system log instead of Tor's logfiles
 #Log notice syslog
 ## To send all messages to stderr:
@@ -67,8 +67,9 @@ DataDirectory /var/lib/tor
 ## HiddenServicePort x y:z says to redirect requests on port x to the
 ## address y:z.
 
-HiddenServiceDir /var/lib/tor/hidden_service/
-HiddenServicePort 22 127.0.0.1:22
+# Uncomment this to allow ssh access to the Torouter over your own Hidden Service
+#HiddenServiceDir /var/lib/tor/hidden_service/
+#HiddenServicePort 22 127.0.0.1:22
 
 #HiddenServiceDir /var/lib/tor/other_hidden_service/
 #HiddenServicePort 80 127.0.0.1:80
@@ -78,16 +79,15 @@ HiddenServicePort 22 127.0.0.1:22
 #
 ## See https://www.torproject.org/docs/tor-doc-relay for details.
 
-## Required: what port to advertise for incoming Tor connections.
-ORPort 9001 
+### Required: what port to advertise for incoming Tor connections.
+ORPort 9001
 ## If you want to listen on a port other than the one advertised
 ## in ORPort (e.g. to advertise 443 but bind to 9090), uncomment the
 ## line below too. You'll need to do ipchains or other port forwarding
 ## yourself to make this work.
 #ORListenAddress 0.0.0.0:9090
-
-## A handle for your relay, so people don't have to refer to it by key.
-#Nickname ididnteditheconfig
+#ORListenAddress 0.0.0.0:9090
+Nickname Torouter
 
 ## The IP address or full DNS name for your relay. Leave commented out
 ## and Tor will guess.
@@ -150,9 +150,10 @@ ORPort 9001
 ## ISP is filtering connections to all the known Tor relays, they probably
 ## won't be able to block all the bridges. Also, websites won't treat you
 ## differently because they won't know you're running Tor. If you can
-## be a real relay, please do; but if not, be a bridge!
-#BridgeRelay 1
+# be a real relay, please do; but if not, be a bridge!
 ExitPolicy reject *:*
+ExitPolicy accept *:*
+
 
 AvoidDiskWrites 1
 
@@ -160,14 +161,16 @@ AvoidDiskWrites 1
 VirtualAddrNetwork 10.192.0.0/10
 AutomapHostsOnResolve 1
 TransPort 9040
-TransListenAddress 172.16.23.1 
+TransListenAddress 172.16.23.1
 DNSPort 5353
-DNSListenAddress 172.16.23.1 
+DNSListenAddress 172.16.23.1
+DNSListenAddress 127.0.0.1:53
 
 User debian-tor
 
-PortForwarding 1
-PortForwardingHelper /usr/local/bin/tor-fw-helper
+# By default we do not have PortForwarding support
+# PortForwarding 1
+# PortForwardingHelper /usr/local/bin/tor-fw-helper
 
 PIDFile /var/run/tor/tor.pid
 

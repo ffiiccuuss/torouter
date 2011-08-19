@@ -3,7 +3,7 @@ import os
 def write(files):
   tmpfiles = []
   for file in files:
-    tmpfile = "/tmp/" + file[0].split("/")[-1:][0] + ".tmp"
+    tmpfile = "/var/tmp/" + file[0].split("/")[-1:][0] + ".tmp"
     tmpfiles.append((tmpfile,file[0]))
     # open the tmp file for write
     f = open(tmpfile, 'w')

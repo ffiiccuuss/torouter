@@ -1,15 +1,29 @@
 # These functions are for parsing /etc/network/interface
 # files, they will be used inside torouter to visualize
 # and edit configuration
-import os
+import os, re
 
 class interfaces:
   def __init__(self,filename):
+    self.filename = filename
     self.fp = open(filename, "r")
     self.wifi = {}
     self.eth1 = {}
     self.eth0 = {}
- 
+
+  def exclude_output(self, iexclude):
+    iface = None
+    output = ""
+    self.fp = open(self.filename, "r")
+    for line in self.fp.readlines():
+      if line.lstrip().startswith("iface"):
+        iface = line.split(" ")[1]
+      if iface == iexclude:
+        continue
+      else:
+        output += line
+    return output
+
   def parse_line(self, line, iface):
     name   = line.split(" ")[0]
     values = " ".join(line.split(" ")[1:]).rstrip()
@@ -65,14 +79,28 @@ class interfaces:
     return output 
 
   def output(self, data):
-    print "iface %s" % data['iface']
+    output = "iface %s" % data['iface']
     for item in data.items():
       if item[0] != "iface":
         if type(item[1]) is list:
           for i in item[1]:
-            print "%s %s" % (item[0], i)
+            output += item[0] + " " + i + "\n"
         else:
-          print "%s %s" % (item[0],item[1])
+          output += item[0] + " " + item[1] + "\n"
+    return output
+
+  def set_ssid(self, essid):
+    i = 0
+    for entry in self.wifi['post-up']:
+      if re.search("sys_cfg_ssid", entry):
+        print essid
+        self.wifi['post-up'][i] = 'post-up /usr/bin/uaputl sys_cfg_ssid "' + essid + '"'
+      i += 1
+
+  # XXX currently works for one pre-up entry, must make it work also for arrays
+  def set_mac(self, mac):
+    self.wifi['pre-up'] = 'ifconfig uap0 hw ether ' + mac
+    
 
 class torrc:
   def __init__(self,filename):

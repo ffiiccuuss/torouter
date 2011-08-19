@@ -1,15 +1,32 @@
 import web
+import re
+from tui.utils import parsing
 from tui import config
 
 def get(name):
   conf = {}
-  # XXX The content of these functions are just
-  #     skeletons
+  itfc = parsing.interfaces(config.interfaces_file)
+  itfc.parse()
+ 
   if name == "wireless":
-    conf['essid'] = "Torouter"
-    conf['encryption'] = "WPA2"
-    conf['mac'] = "00:66:66:66:66:66"
-    conf['key'] = "ljdasjkbcuBH12389Ba"   
+    conf['essid'] = "tor"
+    conf['mac'] = "00:11:22:33:44:55"
+    for entry in itfc.wifi['post-up']:
+      if re.search("sys_cfg_ssid", entry):
+        conf['essid'] = entry.split(" ")[2].split("\"")[1]
+   
+    if type(itfc.wifi['pre-up']) is str:
+      conf['mac'] = itfc.wifi['pre-up'].split(" ")[4]
+    else:
+      for entry in itfc.wifi['pre-up']:
+        if re.search("ether", entry):
+          print "hahah"
+          conf['mac'] = entry.split(" ")[4]
+
+    conf['netmask'] = itfc.wifi['netmask']
+    conf['address'] = itfc.wifi['address']
+    conf['encryption'] = "open"
+    conf['key'] = ""
     return conf
   elif name == "firewall":
     conf['el1'] = "Element 1"
@@ -43,13 +60,17 @@ def get_form(name):
     c = get(name)
     return web.form.Form(
       web.form.Textbox(name='essid',
-        description='Wireless ESSID', value=c['essid']),
+        description='ESSID', value=c['essid']),
       web.form.Textbox(name='mac',
-        description='Wireless MAC address', value=c['mac']),
+        description='MAC address', value=c['mac']),
+      web.form.Textbox(name='address',
+        description='IP address', value=c['address']),
+      web.form.Textbox(name='netmask',
+        description='Netmask address', value=c['netmask']),
       web.form.Dropdown(name='enctype', args=['WPA2', 'WPA', 'WEP (not reccomended)', 'open'],
-        description='Wireless encryption scheme', value=c['encryption']),
+        description='Encryption scheme', value=c['encryption']),
       web.form.Password(name='key',
-        description='key', value=c['key']),
+        description='Key', value=c['key']),
       web.form.Button('save')
     )
   elif name == "firewall":

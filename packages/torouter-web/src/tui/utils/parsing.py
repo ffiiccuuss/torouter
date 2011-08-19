@@ -79,7 +79,7 @@ class interfaces:
     return output 
 
   def output(self, data):
-    output = "iface %s" % data['iface']
+    output = "iface %s\n" % data['iface']
     for item in data.items():
       if item[0] != "iface":
         if type(item[1]) is list:
@@ -94,7 +94,7 @@ class interfaces:
     for entry in self.wifi['post-up']:
       if re.search("sys_cfg_ssid", entry):
         print essid
-        self.wifi['post-up'][i] = 'post-up /usr/bin/uaputl sys_cfg_ssid "' + essid + '"'
+        self.wifi['post-up'][i] = '/usr/bin/uaputl sys_cfg_ssid "' + essid + '"'
       i += 1
 
   # XXX currently works for one pre-up entry, must make it work also for arrays

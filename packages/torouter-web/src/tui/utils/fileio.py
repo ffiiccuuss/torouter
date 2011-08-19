@@ -1,9 +1,12 @@
 import os
 
 def write(files):
+  tmp_dir = "/var/tmp/tor-tui"
   tmpfiles = []
   for file in files:
-    tmpfile = "/tmp/" + file[0].split("/")[-1:][0] + ".tmp"
+    if not os.path.exists(tmp_dir):
+      os.mkdir(tmp_dir)
+    tmpfile = tmp_dir + file[0].split("/")[-1:][0] + ".tmp"
     tmpfiles.append((tmpfile,file[0]))
     # open the tmp file for write
     f = open(tmpfile, 'w')
@@ -15,7 +18,7 @@ def write(files):
   for file in tmpfiles:
     os.rename(file[0], file[1])
 
-files = [('/tmp/file1','blablbal'),('/tmp/file2','The content'),('/tmp/file3','The content 3')]
-
-write(files)
+# for testing
+#files = [('/tmp/file1','blablbal'),('/tmp/file2','The content'),('/tmp/file3','The content 3')]
+#write(files)
 

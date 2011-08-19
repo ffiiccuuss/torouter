@@ -27,3 +27,6 @@ EOF
 apt-key add /tmp/torouter-repo.key
 apt-get update
 apt-get install -t torrouter -y torouter-prep
+
+echo "We're going to trash your system now; you have 30 seconds to bail out!"
+sleep 30 && /usr/bin/torouter_config.sh

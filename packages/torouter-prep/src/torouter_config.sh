@@ -43,6 +43,7 @@ apt-get -y remove exim4-base exim4-config exim4-daemon-light dbus
 
 # Install the weird wireless control for the DreamPlug
 apt-get install -y -t sid uaputl
+apt-get install -y -t sid uapevent
 
 # Install some other packages here:
 apt-get -y install denyhosts ufw

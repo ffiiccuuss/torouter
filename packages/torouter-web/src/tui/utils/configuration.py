@@ -1,5 +1,5 @@
 import web
-import config
+from tui import config
 
 def get(name):
   conf = {}
@@ -8,6 +8,7 @@ def get(name):
   if name == "wireless":
     conf['essid'] = "Torouter"
     conf['encryption'] = "WPA2"
+    conf['mac'] = "00:66:66:66:66:66"
     conf['key'] = "ljdasjkbcuBH12389Ba"   
     return conf
   elif name == "firewall":
@@ -43,6 +44,8 @@ def get_form(name):
     return web.form.Form(
       web.form.Textbox(name='essid',
         description='Wireless ESSID', value=c['essid']),
+      web.form.Textbox(name='mac',
+        description='Wireless MAC address', value=c['mac']),
       web.form.Dropdown(name='enctype', args=['WPA2', 'WPA', 'WEP (not reccomended)', 'open'],
         description='Wireless encryption scheme', value=c['encryption']),
       web.form.Password(name='key',

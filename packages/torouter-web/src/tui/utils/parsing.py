@@ -87,6 +87,13 @@ class torrc:
       else:
         self.parsed.append(line)
 
+  def output(self):
+    output = ""
+    for line in self.fp.readlines():
+      print line
+      output += line
+    return output
+
   def html_output(self):
     output = "<ul id=\"torrc\">"
     for line in self.parsed:

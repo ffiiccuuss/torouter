@@ -2,7 +2,7 @@ import web
 from tui import config
 from tui import view
 from tui.view import render
-from tui.utils import session,configuration,parsing
+from tui.utils import session, configuration, parsing, fileio
 
 """
 This function is used to generate the network
@@ -75,6 +75,16 @@ Wireless network configuration page
 class wireless:
   # XXX do all the backend stuff
   def update_config(self, data):
+    itfc = parsing.interfaces(config.interfaces_file)
+    itfc.parse()
+    itfc.set_ssid(data.essid)
+    itfc.set_mac(data.mac)
+    itfc.wifi['netmask'] = data.netmask
+    itfc.wifi['address'] = data.address
+    filecontent = itfc.exclude_output("uap0") + itfc.output(itfc.wifi)
+    files = [('/etc/network/interfaces', filecontent)]
+    fileio.write(files)
+    #print itfc.output(itfc.wifi)
     return True
 
   def GET(self):

@@ -15,8 +15,8 @@ def write(files):
     f.close()
 
   # rename all the file. This operation is atomic
-  for file in tmpfiles:
-    os.rename(file[0], file[1])
+  #for file in tmpfiles:
+  #  os.rename(file[0], file[1])
 
 # for testing
 #files = [('/tmp/file1','blablbal'),('/tmp/file2','The content'),('/tmp/file3','The content 3')]

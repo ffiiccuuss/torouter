@@ -11,6 +11,7 @@ globals = {}
 # Add your own (username, password) pair
 authinfo = ("test", "test")
 
-interfaces_file = os.getcwd() + "/../torouter-prep/configs/interfaces"
-torrc_file = os.getcwd() + "/../torouter-prep/configs/torrc"
+interfaces_file = os.getcwd() + "/../../torouter-prep/configs/interfaces"
+#torrc_file = os.getcwd() + "/../../torouter-prep/configs/torrc"
+torrc_file = "/tmp/torrc"
 

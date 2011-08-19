@@ -1,1 +1,11 @@
-The main Tor config page
+$def with (content)
+
+<form method="POST" action="/tor/config" enctype="multipart/form-data">
+<ul>
+<li><textarea cols="100" rows="50" name="torrc">
+$:content
+</textarea></li>
+<li><input type="submit" name="save"></li>
+</ul>
+</form>
+

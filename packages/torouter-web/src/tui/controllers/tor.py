@@ -1,7 +1,7 @@
 import web
 import view, config
 from view import render
-from tui.utils import session, parsing
+from tui.utils import session, parsing, fileio
 
 """
 The main Tor status page
@@ -24,12 +24,22 @@ Tor configuration page
 """
 class torrc:
   def update_config(self, data):
+    # Now it will just write to /tmp/torrc
+    files = [('/tmp/torrc',data.torrc)]
+    fileio.write(files)
+
     return True
 
   def GET(self):
-    return render.base(render.torconfig())
+    trc = parsing.torrc(config.torrc_file)
+    output = trc.output()
+    return render.base(render.torconfig(output))
 
   def POST(self):
     self.update_config(web.input())
-    return render.base(render.torconfig())
+    trc = parsing.torrc(config.torrc_file)
+    trc.parse()
+    output = trc.html_output()
+    return render.base(render.torstatus(output,config.torrc_file))
+
 

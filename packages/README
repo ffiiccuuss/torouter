@@ -1,0 +1,6 @@
+If you wish to turn a DreamPlug into a Torouter simply follow these steps:
+
+scp torouter_easy_setup.sh DreamPlug:/tmp/
+ssh DreamPlug torouter_easy_setup.sh
+
+The DreamPlug should now be configured as a Torouter.

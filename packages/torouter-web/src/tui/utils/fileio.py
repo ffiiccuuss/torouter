@@ -15,7 +15,7 @@ def write(files):
   for file in tmpfiles:
     os.rename(file[0], file[1])
 
-files = [('/tmp/file1','blablbal'),('/tmp/file2','The content'),('/tmp/file3','The content 3')]
-
-write(files)
+# for testing
+#files = [('/tmp/file1','blablbal'),('/tmp/file2','The content'),('/tmp/file3','The content 3')]
+#write(files)
 

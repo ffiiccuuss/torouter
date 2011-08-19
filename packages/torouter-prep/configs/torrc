@@ -80,7 +80,7 @@ DataDirectory /var/lib/tor
 ## See https://www.torproject.org/docs/tor-doc-relay for details.
 
 ### Required: what port to advertise for incoming Tor connections.
-ORPort 9001
+ORPort auto
 ## If you want to listen on a port other than the one advertised
 ## in ORPort (e.g. to advertise 443 but bind to 9090), uncomment the
 ## line below too. You'll need to do ipchains or other port forwarding
@@ -151,9 +151,9 @@ Nickname Torouter
 ## won't be able to block all the bridges. Also, websites won't treat you
 ## differently because they won't know you're running Tor. If you can
 # be a real relay, please do; but if not, be a bridge!
-ExitPolicy reject *:*
-ExitPolicy accept *:*
 
+BridgeRelay 1
+ExitPolicy reject *:*
 
 AvoidDiskWrites 1
 

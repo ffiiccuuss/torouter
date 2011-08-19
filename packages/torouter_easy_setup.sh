@@ -24,6 +24,11 @@ kGU=
 -----END PGP PUBLIC KEY BLOCK-----
 EOF
 
+cat << 'EOF' >> /etc/apt/sources.list
+# Torouter project repo
+deb http://torrouter.torproject.org/torrouter torrouter main
+EOF
+
 apt-key add /tmp/torouter-repo.key
 apt-get update
 apt-get install -t torrouter -y torouter-prep

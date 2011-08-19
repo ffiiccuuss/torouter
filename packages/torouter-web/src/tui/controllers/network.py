@@ -55,14 +55,14 @@ class firewall:
 
   def GET(self):
     if session.is_logged() > 0:
-      return render.base(render.firewall(configuration.get_form("firewall")),menu(0))
+      return render.base(render.firewall(configuration.get_form("firewall")),menu(1))
     else:
       return render.base(render.login())
 
   def POST(self):
     if session.is_logged() > 0:
       self.update_config(web.input())
-      return render.base(render.firewall(),menu(1))
+      return render.base(render.firewall(configuration.get_form("firewall")),menu(1))
     else:
       return render.base(render.login())
   

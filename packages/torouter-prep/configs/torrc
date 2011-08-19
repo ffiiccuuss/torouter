@@ -96,8 +96,8 @@ Nickname Torouter
 ## Define these to limit how much relayed traffic you will allow. Your
 ## own traffic is still unthrottled. Note that RelayBandwidthRate must
 ## be at least 20 KBytes.
-#RelayBandwidthRate 100 KBytes  # Throttle traffic to 100KB/s (800Kbps)
-#RelayBandwidthBurst 200 KBytes # But allow bursts up to 200KB/s (1600Kbps)
+RelayBandwidthRate 50KB KBytes
+RelayBandwidthBurst 75KB KBytes
 
 ## Contact info to be published in the directory, so we can contact you
 ## if your relay is misconfigured or something else goes wrong. Google
@@ -151,7 +151,6 @@ Nickname Torouter
 ## won't be able to block all the bridges. Also, websites won't treat you
 ## differently because they won't know you're running Tor. If you can
 # be a real relay, please do; but if not, be a bridge!
-
 BridgeRelay 1
 ExitPolicy reject *:*
 

@@ -1,0 +1,2 @@
+# This is the weird boot partition (hopefully ext2/3/4 later)
+/dev/sda1 /boot vfat nodev,noexec,nosuid 0 0

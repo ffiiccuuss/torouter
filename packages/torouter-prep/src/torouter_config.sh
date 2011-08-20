@@ -88,6 +88,9 @@ zcat $config_dir/armrc.sample.gz > ~$ADMINUSER/.armrc
 # Reconfigure /etc/inittab here
 cp $config_dir/inittab /etc/inittab
 
+# Reconfigure fstab
+cp $config_dir/fstab /etc/fstab
+
 # Configure the network
 # eth0 is our "internet" interface with a dhcp client
 cp $config_dir/interfaces /etc/network/interfaces

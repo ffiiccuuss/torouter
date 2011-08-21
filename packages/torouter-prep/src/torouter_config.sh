@@ -6,7 +6,7 @@ echo "This program will now reconfigure your Debian system into a Torouter"
 
 # For every file we touch, move it to the temp_dir and then tar it up in the end
 export temp_dir="`mktemp -d`"
-export config_dir="/usr/share/torouter-prep/example-configs/"
+export config_dir="/usr/share/torouter-prep/example-configs"
 
 # Add a user to administrate the Torouter later
 export ADMINUSER="torouter"

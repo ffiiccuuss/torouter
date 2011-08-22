@@ -30,7 +30,7 @@ deb http://torrouter.torproject.org/torrouter torrouter main
 EOF
 
 apt-key add /tmp/torouter-repo.key
-apt-get update
+apt-get update --fix-missing
 apt-get install -t torrouter -y torouter-prep
 
 echo "We're going to trash your system now; you have 30 seconds to bail out!"

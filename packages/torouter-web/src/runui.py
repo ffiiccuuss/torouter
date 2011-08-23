@@ -41,7 +41,7 @@ DEBUG = False
 if __name__ == "__main__":
   if DEBUG:
     app.run()
-  service = TorWebDaemon(os.path.join(os.getcwd(),'tui.pid'))
+  service = TorWebDaemon('/tmp/tui.pid')
   if len(sys.argv) == 2:
     if 'start' == sys.argv[1]:
       sys.argv[1] = '8080'

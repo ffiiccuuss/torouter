@@ -117,7 +117,7 @@ cp $config_dir/ttdnsd-default /etc/default/ttdnsd
 cp $config_dir/sshd_config /etc/ssh/sshd_config
 
 # Clean up our cache
-apt-get -y polipo
+apt-get -y remove polipo
 apt-get -y autoremove
 apt-get -y clean
 

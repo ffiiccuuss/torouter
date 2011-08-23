@@ -13,5 +13,5 @@ setup(name='torouter-tui',
       author='Arturo Filasto',
       author_email='hellais@torproject.org',
       url='https://www.torproject.org/',
-      scripts=['src/runui.py', 'src/tui/view.py', 'src/tui/config.py', 'src/tui/daemon.py'])
+      scripts=['src/runui.py', 'src/tui/view.py', 'src/tui/config.py', 'src/daemon.py'])
 

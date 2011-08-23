@@ -51,8 +51,10 @@ apt-get -y install denyhosts ufw
 # Allow us to set the clock:
 apt-get -y -t squeeze-backports install openntpd
 
-# Install Tor and deps:
+# Install Tor and deps from Debian experimental to get 0.2.2.x for ORPort auto:
 apt-get -y -t experimental install tor tor-geoipdb
+# To try the arm builds of 0.2.3.x do this:
+#apt-get -y -t torrouter install tor tor-geoipdb
 # To build a 0.2.3.x Tor:
 # apt-get source tor=0.2.3.1-alpha-1~~squeeze+1
 # Debuild here...
@@ -115,6 +117,8 @@ cp $config_dir/ttdnsd-default /etc/default/ttdnsd
 cp $config_dir/sshd_config /etc/ssh/sshd_config
 
 # Clean up our cache
+apt-get -y polipo
+apt-get -y autoremove
 apt-get -y clean
 
 ## Disable ipv6 support for now

@@ -9,6 +9,6 @@ t_globals = dict(
 # get the path where the script currently resides
 current_path = "/".join(os.path.abspath(__file__).split("/")[:-1])
 # create the render object
-cender = web.template.render(current_path+'/views', cache=config.cache,  globals=t_globals)
+render = web.template.render(current_path+'/views', cache=config.cache,  globals=t_globals)
 render._keywords['globals']['render'] = render
 

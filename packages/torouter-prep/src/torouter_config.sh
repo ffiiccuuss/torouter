@@ -52,7 +52,7 @@ apt-get -y install denyhosts ufw
 apt-get -y -t squeeze-backports install openntpd
 
 # Install Tor and deps:
-apt-get -y install tor tor-geoipdb
+apt-get -y -t experimental install tor tor-geoipdb
 # To build a 0.2.3.x Tor:
 # apt-get source tor=0.2.3.1-alpha-1~~squeeze+1
 # Debuild here...

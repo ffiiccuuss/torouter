@@ -55,7 +55,6 @@ if __name__ == "__main__":
       sys.exit(2)
     sys.exit(0)
   else:
-    sys.argv[1] = '8080'
     print "starting daemon..."
     service.start()
 

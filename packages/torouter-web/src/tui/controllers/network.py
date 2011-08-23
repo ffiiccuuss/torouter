@@ -81,7 +81,7 @@ class wireless:
     itfc.set_mac(data.mac)
     itfc.wifi['netmask'] = data.netmask
     itfc.wifi['address'] = data.address
-    filecontent = itfc.exclude_output("uap0") + itfc.output(itfc.wifi)
+    filecontent = itfc.exclude_output("wlan0") + itfc.output(itfc.wifi)
     files = [('/etc/network/interfaces', filecontent)]
     fileio.write(files)
     #print itfc.output(itfc.wifi)

@@ -27,7 +27,7 @@ class interfaces:
   def parse_line(self, line, iface):
     name   = line.split(" ")[0]
     values = " ".join(line.split(" ")[1:]).rstrip()
-    if iface == "uap0":
+    if iface == "wlan0":
       if self.wifi.has_key(name):
         if type(self.wifi[name]) is list:
           self.wifi[name].append(values)
@@ -99,7 +99,7 @@ class interfaces:
 
   # XXX currently works for one pre-up entry, must make it work also for arrays
   def set_mac(self, mac):
-    self.wifi['pre-up'] = 'ifconfig uap0 hw ether ' + mac
+    self.wifi['pre-up'] = 'ifconfig wlan0 hw ether ' + mac
     
 
 class torrc:

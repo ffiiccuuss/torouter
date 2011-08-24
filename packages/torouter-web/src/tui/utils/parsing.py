@@ -6,7 +6,11 @@ import os, re
 class interfaces:
   def __init__(self,filename):
     self.filename = filename
-    self.fp = open(filename, "r")
+    try:
+      self.fp = open(filename, "r")
+    except:
+      # this will happen on our first run or at reboot
+      self.fp = open("/etc/tor/torrc", "r")
     self.wifi = {}
     self.eth1 = {}
     self.eth0 = {}

@@ -2,6 +2,7 @@
 # files, they will be used inside torouter to visualize
 # and edit configuration
 import os, re
+from tui import config
 
 class interfaces:
   def __init__(self,filename):
@@ -31,7 +32,7 @@ class interfaces:
   def parse_line(self, line, iface):
     name   = line.split(" ")[0]
     values = " ".join(line.split(" ")[1:]).rstrip()
-    if iface == "wlan0":
+    if iface == config.network_interfaces[0]:
       if self.wifi.has_key(name):
         if type(self.wifi[name]) is list:
           self.wifi[name].append(values)
@@ -39,7 +40,7 @@ class interfaces:
           self.wifi[name] = [self.wifi[name],values]
       else:
         self.wifi.update({name : values})
-    elif iface == "eth1":
+    elif iface == config.network_interfaces[2]:
       if self.eth1.has_key(name):
         if type(self.eth1[name]) is list:
           self.eth1[name].append(values)
@@ -47,7 +48,7 @@ class interfaces:
           self.eth1[name] = [self.eth1[name],values]
       else:
         self.eth1.update({name : values})
-    elif iface == "eth0":
+    elif iface == config.network_interfaces[1]:
       if self.eth0.has_key(name):
         if type(self.eth0[name]) is list:
           self.eth0[name].append(values)
@@ -103,7 +104,7 @@ class interfaces:
 
   # XXX currently works for one pre-up entry, must make it work also for arrays
   def set_mac(self, mac):
-    self.wifi['pre-up'] = 'ifconfig wlan0 hw ether ' + mac
+    self.wifi['pre-up'] = 'ifconfig ' + config.network_interfaces[0] + ' hw ether ' + mac
     
 
 class torrc:

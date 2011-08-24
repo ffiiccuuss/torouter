@@ -9,16 +9,23 @@ The main Tor status page
 """
 class status:
   def GET(self):
-    trc = parsing.torrc(config.torrc_file)
-    trc.parse()
-    output = trc.html_output()
-    return render.base(render.torstatus(output,config.torrc_file))
+    if session.is_logged() > 0:
+      trc = parsing.torrc(config.torrc_file)
+      trc.parse()
+      output = trc.html_output()
+      return render.base(render.torstatus(output,config.torrc_file))
+    else:
+      return render.base(render.login())
+
 
   def POST(self):
-    trc = parsing.torrc(config.torrc_file)
-    trc.parse()
-    output = trc.html_output()
-    return render.base(render.torstatus(output,config.torrc_file))
+    if session.is_logged() > 0:
+      trc = parsing.torrc(config.torrc_file)
+      trc.parse()
+      output = trc.html_output()
+      return render.base(render.torstatus(output,config.torrc_file))
+    else:
+      return render.base(render.login())
 
 """
 Tor configuration page
@@ -32,9 +39,12 @@ class torrc:
     return True
 
   def GET(self):
-    trc = parsing.torrc(config.torrc_file)
-    output = trc.output()
-    return render.base(render.torconfig(output))
+    if session.is_logged() > 0:
+      trc = parsing.torrc(config.torrc_file)
+      output = trc.output()
+      return render.base(render.torconfig(output))
+    else:
+      return render.base(render.login())
 
   def POST(self):
     if session.is_logged() > 0:

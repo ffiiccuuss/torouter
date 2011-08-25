@@ -48,5 +48,13 @@ following to switch the root filesystem back to the internal microSD card:
 
 - - - - -
 
+To turn the device into a Torouter you'll want to do the following:
+	# ssh or login to the router
+	wget https://gitweb.torproject.org/torouter.git/blob_plain/HEAD:/packages/torouter_easy_setup.sh
+	bash torouter_easy_setup.sh
+	reboot
+
+This should result in a proper Torouter without any need for further configuration.
+
 Be aware that this is an imcomplete solution for now .. you will want to at
 least do things like create unique ssh host keys for your device!

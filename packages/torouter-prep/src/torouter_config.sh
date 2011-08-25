@@ -80,6 +80,9 @@ apt-get -y install ttdnsd
 # Install a normal dns cache for eth1
 apt-get -y install dnsmasq
 
+# install the best dhcp client we're gonna get in debian land
+apt-get -y install isc-dhcp-client
+
 ##
 ## Configuration stage of the script
 ##

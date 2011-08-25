@@ -8,8 +8,8 @@ iface lo inet loopback
 # The primary network interface
 auto eth0
 iface eth0 inet dhcp
-	post-up ifup wlan0
-	post-down ifdown wlan0
+	post-up ifup uap0
+	post-down ifdown uap0
 
 auto eth1
 iface eth1 inet static
@@ -18,12 +18,12 @@ iface eth1 inet static
 	network 10.23.42.0
 	broadcast 10.23.42.255
 	post-up echo 1 > /proc/sys/net/ipv4/ip_forward
-        # this must happen after have brought up wlan0 because it clears the nat tables
+        # this must happen after have brought up uap0 because it clears the nat tables
         post-up iptables -t nat -A POSTROUTING -s 10.23.42.0/24 -o eth0 -j MASQUERADE
 	post-up /etc/init.d/dnsmasq restart
 
 # The magic Tor wireless network
-iface wlan0 inet static
+iface uap0 inet static
         address 172.16.23.1
 	netmask 255.255.255.0
 	network 172.16.23.0

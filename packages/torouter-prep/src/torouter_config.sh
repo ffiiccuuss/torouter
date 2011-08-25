@@ -46,8 +46,11 @@ apt-get -y install vim
 # install a sane pager
 apt-get -y install less
 
+# Install screen
+apt-get -y install screen
+
 # Install a few networking tools
-apt-get -y install lsof wireless-tools
+apt-get -y install lsof wireless-tools iputils-ping
 
 # Install the weird wireless control for the DreamPlug
 apt-get install -y -t sid uaputl
@@ -91,6 +94,9 @@ apt-get -y install dnsmasq
 # install the best dhcp client we're gonna get in debian land
 apt-get -y install isc-dhcp-client
 
+# install our own real dns cache
+apt-get -y install unbound
+
 ##
 ## Configuration stage of the script
 ##
@@ -128,12 +134,12 @@ cp $config_dir/ttdnsd-default /etc/default/ttdnsd
 cp $config_dir/sshd_config /etc/ssh/sshd_config
 
 # Clean up our cache
-apt-get -f -y remove polipo minissdpd
+apt-get -f -y remove --purge polipo minissdpd
 
 # Remove a bunch of stuff:
 apt-get -y remove exim4-base exim4-config exim4-daemon-light dbus
 
-apt-get -y autoremove
+#apt-get -y autoremove
 apt-get -y clean
 
 # Fixup apt if something goes wrong
@@ -142,12 +148,15 @@ apt-get install -f
 
 ## Disable ipv6 support for now
 cp $config_dir/modprobe.d-blacklist.conf /etc/modprobe.d/blacklist.conf
-echo net.ipv6.conf.all.disable_ipv6=1 > /etc/sysctl.d/disableipv6.conf
+# We don't need this if the ipv6 module is not loaded
+#echo net.ipv6.conf.all.disable_ipv6=1 > /etc/sysctl.d/disableipv6.conf
 ##
 ## Restart the network here
 ##
 
 ifup -a
+
+apt-get -y install unbound
 
 ##
 ## Restart services here

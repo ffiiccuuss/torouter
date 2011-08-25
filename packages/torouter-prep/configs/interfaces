@@ -8,8 +8,8 @@ iface lo inet loopback
 # The primary network interface
 auto eth0
 iface eth0 inet dhcp
-	post-up ifup wlan0
-	post-down ifdown wlan0
+	post-up ifup uap0
+	post-down ifdown uap0
 
 auto eth1
 iface eth1 inet static
@@ -23,7 +23,8 @@ iface eth1 inet static
 	post-up /etc/init.d/dnsmasq restart
 
 # The magic Tor wireless network
-iface wlan0 inet static
+auto uap0
+iface uap0 inet static
         address 172.16.23.1
 	netmask 255.255.255.0
 	network 172.16.23.0

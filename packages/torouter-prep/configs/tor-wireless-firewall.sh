@@ -7,7 +7,7 @@ NON_TOR="10.0.2.0/24 10.23.42.0/24 172.16.23.0/24"
 TRANS_PORT="9040"
 
 # your internal interface
-INT_IF="wlan0"
+INT_IF="uap0"
 
 iptables -F
 iptables -t nat -F

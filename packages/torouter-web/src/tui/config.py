@@ -12,7 +12,7 @@ globals = {}
 authinfo = ("test", "test")
 
 # Network devices
-network_devices = ('wlan0', 'eth0', 'eth1')
+network_devices = ('uap0', 'eth0', 'eth1')
 
 #interfaces_file = os.getcwd() + "/../../torouter-prep/configs/interfaces"
 #torrc_file = os.getcwd() + "/../../torouter-prep/configs/torrc"

@@ -38,8 +38,16 @@ cp $config_dir/apt.conf /etc/apt/apt.conf
 
 apt-get -y update
 
-# Remove a bunch of stuff:
-apt-get -y remove exim4-base exim4-config exim4-daemon-light dbus
+apt-get -y install apt-utils
+
+# Install a sane editor
+apt-get -y install vim
+
+# install a sane pager
+apt-get -y install less
+
+# Install a few networking tools
+apt-get -y install lsof wireless-tools
 
 # Install the weird wireless control for the DreamPlug
 apt-get install -y -t sid uaputl
@@ -61,7 +69,7 @@ apt-get -y -t experimental install tor tor-geoipdb
 
 # To build with natpmp support
 apt-get -y -t experimental install libnatpmp-dev
-apt-get -y -t experimental install libnatpmp0
+apt-get -y -t experimental install libnatpmp1
 
 # To build with miniupnpc support
 apt-get -y -t squeeze-backports install libminiupnpc-dev
@@ -120,13 +128,26 @@ cp $config_dir/ttdnsd-default /etc/default/ttdnsd
 cp $config_dir/sshd_config /etc/ssh/sshd_config
 
 # Clean up our cache
-apt-get -y remove polipo minissdpd
+apt-get -f -y remove polipo minissdpd
+
+# Remove a bunch of stuff:
+apt-get -y remove exim4-base exim4-config exim4-daemon-light dbus
+
 apt-get -y autoremove
 apt-get -y clean
+
+# Fixup apt if something goes wrong
+apt-get install -f
+
 
 ## Disable ipv6 support for now
 cp $config_dir/modprobe.d-blacklist.conf /etc/modprobe.d/blacklist.conf
 echo net.ipv6.conf.all.disable_ipv6=1 > /etc/sysctl.d/disableipv6.conf
+##
+## Restart the network here
+##
+
+ifup -a
 
 ##
 ## Restart services here

@@ -163,7 +163,8 @@ TransPort 9040
 TransListenAddress 172.16.23.1
 DNSPort 5353
 DNSListenAddress 172.16.23.1
-DNSListenAddress 127.0.0.1:53
+# If you disable unbound, you may enable this
+#DNSListenAddress 127.0.0.1:53
 
 User debian-tor
 

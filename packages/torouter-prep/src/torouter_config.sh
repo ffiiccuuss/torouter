@@ -11,9 +11,7 @@ export config_dir="/usr/share/torouter-prep/example-configs/"
 # Add a user to administrate the Torouter later
 export ADMINUSER="torouter"
 export ADMINGROUP="torouter"
-
-addgroup $ADMINGROUP
-useradd -g $ADMINGROUP -s /bin/bash $ADMINUSER
+export TORADMINGROUP="debian-tor"
 
 # Install the Tor repo key
 # gpg --keyserver keys.gnupg.net --recv 886DDD89
@@ -145,7 +143,6 @@ apt-get -y clean
 # Fixup apt if something goes wrong
 apt-get install -f
 
-
 ## Disable ipv6 support for now
 cp $config_dir/modprobe.d-blacklist.conf /etc/modprobe.d/blacklist.conf
 # We don't need this if the ipv6 module is not loaded
@@ -166,8 +163,17 @@ apt-get -y install unbound
 /etc/init.d/tor restart
 /etc/init.d/ttdnsd restart
 
+addgroup $ADMINGROUP
+useradd -g $ADMINGROUP -G $TORADMINGROUP -s /bin/bash $ADMINUSER
+
+##
+## Add arm startup trick with cron for shared screen
+##
+crontab -u $ADMINUSER $config_dir/tor-arm-crontab
+
 ##
 ## Touch a stamp to show that we're now a Torouter
 ##
 
 echo "torouter $VERSION" > /etc/torouter
+echo "You should reboot now to ensure that everything works as expected"

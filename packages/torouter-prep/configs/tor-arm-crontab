@@ -1,0 +1,3 @@
+# Now anyone using the torouter can attach to a long term screen with arm
+# This will run at boot time and it should run forever
+@reboot screen -d -m -S tor-arm /usr/bin/arm

@@ -48,7 +48,8 @@ apt-get -y install less
 apt-get -y install screen
 
 # Install a few networking tools
-apt-get -y install lsof wireless-tools iputils-ping
+apt-get -y install lsof wireless-tools iputils-ping \
+  lsof net-tools tcptraceroute traceroute mtr-tiny
 
 # Install the weird wireless control for the DreamPlug
 apt-get install -y -t sid uaputl
@@ -167,7 +168,7 @@ addgroup $ADMINGROUP
 useradd -g $ADMINGROUP -G $TORADMINGROUP -s /bin/bash $ADMINUSER
 
 ##
-## Add arm startup trick with cron for shared screen
+## Add arm startup trick with cron for shared screen run as $ADMINUSER
 ##
 crontab -u $ADMINUSER $config_dir/tor-arm-crontab
 

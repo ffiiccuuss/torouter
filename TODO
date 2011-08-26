@@ -1,0 +1,6 @@
+The main thing remaining to be done is to produce a USB disk or a script used in conjunction with a usb disk
+that when run on a DreamPlug will preare the system as expected. We should be
+able to produce a Torouter with only a single command.
+
+Everything else is bug hunting and improving the web ui.
+

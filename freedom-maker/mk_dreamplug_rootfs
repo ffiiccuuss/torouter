@@ -115,6 +115,12 @@ allow-hotplug eth1
 iface eth1 inet dhcp
         " > $target/etc/network/interfaces
 
+# Override the above stuff - we know better
+cp ../packages/torouter-prep/configs/interfaces $target/etc/network/interfaces
+
+# Stop the libertas module from loading
+cp ../packages/torouter-prep/configs/modprobe.d-blacklist.conf $target/etc/modprobe.d/blacklist.conf
+
 # Setup nameserver (use OpenDNS by default)
 echo "nameserver 208.67.222.222
 nameserver 208.67.220.220" > $target/etc/resolv.conf

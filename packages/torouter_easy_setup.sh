@@ -33,5 +33,28 @@ apt-key add /tmp/torouter-repo.key
 apt-get update --fix-missing
 apt-get install -t torrouter -y torouter-prep
 
+echo "This is the current state of the system:"
+
+echo "Kernel message log: "
+
+dmesg
+
+echo "Kernel modules: "
+
+lsmod
+
+echo "File systems: "
+mount
+echo
+df -h
+
+echo "Interfaces: "
+
+ifconfig -a
+
+echo "Route info: "
+
+route -n
+
 echo "We're going to trash your system now; you have 30 seconds to bail out!"
 sleep 30 && /usr/bin/torouter_config.sh

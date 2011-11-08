@@ -1,1 +1,24 @@
 This is the place where we put all things relating to the Torouter.
+
+The project home page:
+https://trac.torproject.org/projects/tor/wiki/doc/Torouter
+
+The project road map:
+https://trac.torproject.org/projects/tor/wiki/doc/Torouter/Roadmap
+
+Your DreamPlug has arrived in a disabled state - you will need to hack it:
+
+0) re-flash from inside the OS it shipped with:
+  https://trac.torproject.org/projects/tor/wiki/doc/DebianDreamPlug#Step9:IfyoucannotsuccessfullystarttheUSBdevices
+
+1) Create a bootable USB disk, attach the JTAG, boot/re-flash, ..., anonymity!
+
+2) A new thing that is currently undocumented
+
+To create a Torouter from this repository you'll want to clone it:
+
+  git clone git://git.torproject.org/torouter.git
+
+Please see the freedom-maker/README if you wish to create a bootable USB disk.
+You will want a USB disk and the DreamPlug JTAG for reflashing, reinstalling,
+and development related activities.

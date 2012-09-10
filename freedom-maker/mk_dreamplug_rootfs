@@ -29,157 +29,76 @@
 #
 # Runs multistrap and readies the resulting root filesystem to silently 
 # complete package configuration on the first boot-up.
+#
+# Accepts the multistrap config file name as an argument.
+
+# We don't tolerate errors.
+set -e
+
+architecture=armel
+if [ -n "$1" ]
+then
+    architecture=$1
+fi
+
+config=multistrap-configs/fbx-$architecture.conf
+if [ -n "$2" ]
+then
+    config=$2
+fi
+
+# users
+hostname='freedombox'
+rootpassword='freedom'
+user='fbx'
+userpassword='frdm'
+export hostname
+export rootpassword
+export user
+export userpassword
 
 # where to build images, etc
 basedir=`pwd`/build
-target=$basedir/dreamplug
+source=`pwd`/source
+target=$basedir/$architecture
 tmpdir=$basedir/tmp
 pkgcache=$tmpdir/aptcache
+homedir=$target/home/$user
+export basedir
+export source
+export target
+export tmpdir
+export pkgcache
+export homedir
 
+# make the directories we'll need.
 mkdir -p $target
+rm -rf $target/*
 mkdir -p $tmpdir
 mkdir -p $pkgcache
-
-hostname='freedombox'
-rootpassword='freedom'
-
-kernelimage=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/uImage
-kernelmodules=http://www.newit.co.uk/kernels/Dreamplug/Dreamplug-prerelease/Modules.tar.gz
-
-if [ ! -f $tmpdir/uImage ]
-then
-	wget -c $kernelimage --output-document="$tmpdir/uImage"
-fi
-if [ ! -f $tmpdir/linux.tar.gz ]
-then
-	wget -c $kernelmodules --output-document="$tmpdir/linux.tar.gz"
-fi
-
-rm -rf $target/*
-
 mkdir -p $target/var/cache/apt/ && mount -o bind $pkgcache $target/var/cache/apt/
-
-echo "Multistrapping..."
-multistrap -f fbx-armel.conf --no-auth -d $target 
-
-umount $target/var/cache/apt/
-mkdir $target/var/cache/apt/archives
-
-echo "Unpacking kernel modules..."
-mkdir -p $target/lib/modules/
-tar -C $target/lib/ -zxvf $tmpdir/linux.tar.gz | tail
-
-echo "copy uImage to target filesystem"
-mkdir -p $target/boot
-cp build/tmp/uImage $target/boot/uImage
-echo "copy copy2dream.sh script to target filesystem"
-cp bin/copy2dream.sh $target/boot/copy2dream.sh
-
-# Until udev is configured and run for the first time, dev nodes won't be created, but we need some basic ones for spawning a console (console) and creating RSA keys for SSH (urandom).
-echo "Creating basic device nodes"
-mknod $target/dev/console c 5 1
-mknod $target/dev/random c 1 8
-mknod $target/dev/urandom c 1 9
-mknod $target/dev/null c 1 3
-mknod $target/dev/ptmx c 5 2
-
-# Basic fstab & mtab..
-echo "Setting up basic fstab & mtab"
-echo "
-rootfs	/		rootfs	relatime,rw	0	0
-proc	/proc		proc	none		0	0
-sys	/sys		sysfs	none		0	0
-none	/dev/pts	devpts	defaults	0	0
-tmpfs   /tmp            tmpfs   rw,nosuid,nodev 0       0
-" > $target/etc/fstab
-
-touch $target/etc/mtab
-
-# Set up hostname
-echo "Setting up hostname, /etc/network/interfaces, nameservers, persistent-net-generator rules"
-echo $hostname > $target/etc/hostname
-
-# Create /etc/network/interfaces
-echo "# This file describes the network interfaces available on your system
-# and how to activate them. For more information, see interfaces(5).
-
-# The loopback network interface
-auto lo
-iface lo inet loopback
-
-# The primary network interface
-allow-hotplug eth0
-iface eth0 inet dhcp
-
-allow-hotplug eth1
-iface eth1 inet dhcp
-        " > $target/etc/network/interfaces
-
-# Override the above stuff - we know better
-cp ../packages/torouter-prep/configs/interfaces $target/etc/network/interfaces
-
-# Stop the libertas module from loading
-cp ../packages/torouter-prep/configs/modprobe.d-blacklist.conf $target/etc/modprobe.d/blacklist.conf
-
-# Setup nameserver (use OpenDNS by default)
-echo "nameserver 208.67.222.222
-nameserver 208.67.220.220" > $target/etc/resolv.conf
-
-# Touch the net generator udev so that eth0 won't be reassigned in case the user
-# changes the MAC address - this may happen if you change the rootfs between plugs.
-touch $target/etc/udev/rules.d/75-persistent-net-generator.rules
-
-# generate configuration script
-
-echo "Create script to configure packages in qemu-user-static"
-
-echo "
-echo \"Preconfiguring dash - else dash and bash will be left in a broken state\"
-/var/lib/dpkg/info/dash.preinst install
-
-echo \"Configuring all packages\"
-export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
-export LC_ALL=C LANGUAGE=C LANG=C
-dpkg --configure -a
-
-# Establish an initial root password
-echo \"Set root password to \"$rootpassword
-echo root:$rootpassword | /usr/sbin/chpasswd
-
-# By default, spawn a console on the serial port
-echo \"Adding a getty on the serial port\"
-echo \"T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100\" >> /etc/inittab
-
-echo \"Tweaks to reduce flash writes as per http://www.plugcomputer.org/plugwiki/index.php/Reduce_Flash_Writes\"
-echo \"
-# Reduce writes to flash drives
-vm.laptop_mode=5
-vm.swappiness=0
-vm.dirty_writeback_centisecs=1500
-vm.dirty_expire_centisecs=1500
-\" >> /etc/sysctl.conf
-
-echo \"Deleting this very same script\"
-rm -f /install.sh
-
-echo \"Syncing filesystem just in case something didn't get written\"
-sync
-
-echo \"End configuration progress by exiting from the chroot\"
-exit
-
-" > $target/install.sh  
-
-chmod 755 $target/install.sh
-
-echo "Use qemu-user-static to perform first-boot configuration now"
-
+mkdir -p $target/var/cache/apt/archives
 mkdir -p $target/usr/bin
-cp /usr/bin/qemu-arm-static $target/usr/bin
-chroot $target /install.sh
-rm $target/usr/bin/qemu-arm-static
 
+# multistrap
+echo "Multistrapping..."
+multistrap -f $config -d $target
+rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
+
+# un-do the bind mount so we don't trip over it later
+umount $target/var/cache/apt/
+
+# copy!
+echo "Copying the source directory to the FreedomBox root."
+rsync -av $source/ $target
+
+# add projects to the image to make it a useful FreedomBox.
+bin/projects
+
+# cleanup and finalize the image so it boots correctly.
+bin/finalize
+
+# finish!
 echo "Syncing..."
 sync
-
 echo "Finished. You may now copy the rootfs to the plug."

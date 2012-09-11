@@ -8,6 +8,6 @@ Homepage: <https://www.torproject.org/>
 
 Package: torouter-tui
 Architecture: all
-Depends: ${misc:Depends}, python, python-webpy
+Depends: ${misc:Depends}, python, python-webpy, python-daemon
 Description: Torouter web UI
  This package provides the Torouter web UI.

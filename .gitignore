@@ -1,1 +1,10 @@
 *.pyc
+*~
+*.swp
+*.o
+*.a
+.*
+*.tmp
+*.old
+packages/packages-for-upload/*
+

@@ -1,3 +1,9 @@
+torouter-tui (0.0.1-2) unstable; urgency=low
+
+  * Fix python-daemon dependancy problem
+
+ -- Bryan Newbold <bnewbold@robocracy.org>  Tue, 11 Sep 2012 14:47:35 +0200
+
 torouter-tui (0.0.1-1) unstable; urgency=low
 
   * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>

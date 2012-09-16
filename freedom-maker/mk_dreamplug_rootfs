@@ -41,17 +41,17 @@ then
     architecture=$1
 fi
 
-config=multistrap-configs/fbx-$architecture.conf
+config=multistrap-configs/torouter-$architecture.conf
 if [ -n "$2" ]
 then
     config=$2
 fi
 
 # users
-hostname='freedombox'
+hostname='torouter'
 rootpassword='freedom'
 user='fbx'
-userpassword='frdm'
+userpassword='freedom'
 export hostname
 export rootpassword
 export user
@@ -71,6 +71,12 @@ export tmpdir
 export pkgcache
 export homedir
 
+# clear any old cruft
+if (mount | grep $target/var/cache/apt) 
+then
+    umount $target/var/cache/apt/
+fi
+
 # make the directories we'll need.
 mkdir -p $target
 rm -rf $target/*
@@ -82,7 +88,9 @@ mkdir -p $target/usr/bin
 
 # multistrap
 echo "Multistrapping..."
-multistrap -f $config -d $target
+# XXX: DEATH: work around torrouter.torproject.org GPG key issue
+# multistrap -f $config -d $target
+multistrap --no-auth -f $config -d $target
 rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
 
 # un-do the bind mount so we don't trip over it later
@@ -95,7 +103,15 @@ rsync -av $source/ $target
 # add projects to the image to make it a useful FreedomBox.
 bin/projects
 
+# torouter!
+echo "Copying torouter-specific files..."
+# Override the above stuff - we know better
+cp ../packages/torouter-prep/configs/interfaces $target/etc/network/interfaces
+# Stop the libertas module from loading
+cp ../packages/torouter-prep/configs/modprobe.d-blacklist.conf $target/etc/modprobe.d/blacklist.conf
+
 # cleanup and finalize the image so it boots correctly.
+echo "Finalizing..."
 bin/finalize
 
 # finish!

@@ -1,0 +1,38 @@
+system config files should live here in ./config
+system config scripts should live here in ./scripts
+    torouter-takeover
+        add torproject keys (prompt?)
+        setup sources.list
+        apt-get update
+        install dependancies like tor and torouterui
+        run torouter_preboot.sh
+    torouter-preboot
+        check that dependancies are installed (tor, torouterui, etc) or fail
+        copy/install all configuration files
+        install 
+        create users and groups
+        remove/disable unwanted packages
+        setup firstboot
+    torouter-firstboot (just generates ssh keys; could be done elsewhere?)
+    torouter-copy2internal (TODO)
+    torouter-setupuboot (TODO)
+
+torouter-prep contains all the above files
+
+torouter_easy_setup.sh installs torouter-prep, executes torouter-takeover,
+then reboots. it should be included in torouter-prep (for signing?)
+
+install.sh script executes withing qemu:
+    configures all installed packages
+    run torouter_preboot.sh
+    install .deb src packages
+    kernel re-packing
+    (re)set root password
+    (re)set user password
+    unconfigure sshd (so it will get re-configured on 1st boot)
+
+differences between takeover and .img build process:
+- don't need new ssh keys with takeover
+- don't need kernel re-pack with takeover
+- don't need fstab re-write with takeover
+

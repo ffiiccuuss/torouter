@@ -1,33 +1,130 @@
-This is the place where we put all things relating to the Torouter.
+ _                        _            
+| |_ ___  _ __ ___  _   _| |_ ___ _ __ 
+| __/ _ \| '__/ _ \| | | | __/ _ \ '__|
+| || (_) | | | (_) | |_| | ||  __/ |   
+ \__\___/|_|  \___/ \__,_|\__\___|_|   
 
-The project home page:
-https://trac.torproject.org/projects/tor/wiki/doc/Torouter
+Project wiki page: https://trac.torproject.org/projects/tor/wiki/doc/Torouter
 
-The project road map:
-https://trac.torproject.org/projects/tor/wiki/doc/Torouter/Roadmap
+= Repository Contents =
 
-Your DreamPlug has arrived in a disabled state - you will need to hack it:
+  README            this file
+  ./doc             (WIP) text file user and developer documentation
+  ./freedom-maker   firmware build scripts
+  ./config          torouter configuration files
+  ./packages        source for torouter-specific software packages
 
-0) re-flash from inside the OS it shipped with:
-  https://trac.torproject.org/projects/tor/wiki/doc/DebianDreamPlug#Step9:IfyoucannotsuccessfullystarttheUSBdevices
+= Installation and Build Instructions =
 
-1) Create a bootable USB disk, attach the JTAG, boot/re-flash, ..., anonymity!
+There are several ways to get the debian-based torouter system running on a
+DreamPlug device:
 
-2) A new thing that is currently undocumented
+ - Flash a pre-built image onto an external USB stick
 
-To create a Torouter from this repository you'll want to clone it:
+ - Flash a pre-built image onto an internal microSD card
 
-  git clone git://git.torproject.org/torouter.git
+ - Build and flash a new image from source
 
-Please see the freedom-maker/README if you wish to create a bootable USB disk.
-You will want a USB disk and the DreamPlug JTAG for reflashing, reinstalling,
-and development related activities.
+ - Install the FreedomBox distribution or a "vanilla" debian, then run a
+   torouter takeover/upgrade script
 
------------------------------------------------------------------------------
+For the later, see the "Building" section, then follow either the USB stick or
+microSD card directions.
 
-If you wish to turn a DreamPlug into a Torouter simply follow these steps:
+Regardless of the installation method and target, if the device is in a
+"factory fresh" state some bootloader preparation is required. See the
+"DreamPlug Preparation" section below; you will need serial console access to
+the DreamPlug, for example with the sometimes included GuruPlug JTAG device.
 
-scp torouter_easy_setup.sh DreamPlug:/tmp/
-ssh DreamPlug torouter_easy_setup.sh
+=== Flash Pre-Built Image to External USB stick ===
 
-The DreamPlug should now be configured as a Torouter.
+TODO:
+
+    $ dd if=$IMGFILE of=$USBBASEDEV
+
+=== Flash Pre-Built Image to Internal microSD card ===
+
+TODO:
+
+    $ dd if=$IMGFILE of=$USBBASEDEV
+
+Mount the device, make changes to /etc/fstab. Also need to make changes to the
+initrd image?
+
+Make changes to u-boot configuration.
+
+=== Torouter Takeover Script ===
+
+Simply copy over the torouter_easy_setup.sh and execute it (with sudo
+permissions) on the device. Substituting $DPHOST for an actual IP/hostname):
+
+    scp packages/torouter_easy_setup.sh $DPHOST:/tmp/
+    ssh $DPHOST /tmp/torouter_easy_setup.sh
+
+= Build a Torouter Image From Scratch =
+
+NOTE: it may be (?) that the deb.torproject.org apt repo needs to exist in the
+*host* operating system. See https://www.torproject.org/docs/debian.html.en
+
+These instructions assume a debian wheezy host system.
+
+In brief, the build process proceeds to:
+
+1. use the ``multistrap`` tool to fetch debian packages and build a complete
+   root filesystem
+2. copies in some torouter-specific configuration files
+3. optionally copies in locally-built torouter-specific .deb files
+3. emulates booting into the system using qemu to run some more configuration
+   steps
+
+By default, the multistrap process will try to fetch pre-build torouter
+software and configuration packages (such as the web user interface) from
+torouter.torproject.org. If you've made local changes to those packages, you
+can bundle in your own .deb files by building them into the
+./packages/packages-for-upload directory, though the local packages may get
+overwriten by apt updates if the version number is not high enough. See
+./packages/README for build instructions.
+
+To proceed with building the torouter image, first fetch build-system
+dependancies (this probably isn't an exhaustive list):
+
+    $ apt-get install rsync multistrap qemu-user-static u-boot-tools git mercurial debootstrap extlinux
+
+Then enter the freedom-maker directory and run a build:
+
+    $ cd ./freedom-maker
+    $ sudo ./buildrootfs.sh
+
+If that was ultimately successful (you can ignore some apt warnings and errors
+that may scroll by), you now have a root filesystem ready to be copied to a USB
+stick. Insert a USB storage device and partition it to have a small (~80MB)
+boot partition followed by an ext3 root partition (1GB or so minimum). Make
+note of the boot and root partition nodes (eg, $BOOTNODE=/dev/sdc1 and
+$ROOTNODE=/dev/sdc2), then copy over the built distribution:
+
+    $ sudo ./copy2card.sh $BOOTNODE $ROOTNODE
+
+If that was successful, contratulations, you now have a usable torouter thumb
+stic! You could skip ahead now to DreamPlug Perparation.
+
+If you want to dump your fresh un-booted image to a static .img file (which
+could be distributed to others or flashed to another stick quickly), run the
+copy2img.sh script with the "base" device of the thumbstick as an argument (eg,
+$STICKNODE=/dev/sdc):
+
+    $ sudo ./copy2img.sh $STICKNODE
+
+=== DreamPlug Preparation ===
+
+Prepping a vanilla DreamPlug device is somewhat involved and will require a
+access to the hardware serial console (eg, using a GuruPlug-branded JTAG device
+functions as a USB serial console adapter). 
+
+First, upgrade u-boot to a recent version (see directions in freedom-maker
+directory), then set the appropriate bootloader environment variables:
+
+    TODO: XXX:
+
+FYI, there are at least two variants of the DreamPlug hardware, with slightly
+differing chipsets.
+

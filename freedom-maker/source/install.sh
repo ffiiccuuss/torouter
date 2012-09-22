@@ -19,7 +19,8 @@ dpkg --get-selections > /tmp/selections
 mkdir -p /sourcecode
 cd sourcecode
 cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
-apt-get source --download-only `cat /tmp/packages`
+# TODO: torouter
+#apt-get source --download-only `cat /tmp/packages`
 
 # sshd may be left running by the postinst, clean that up
 /etc/init.d/ssh stop

@@ -50,7 +50,7 @@ fi
 # users
 hostname='torouter'
 rootpassword='freedom'
-user='fbx'
+user='torouter'
 userpassword='freedom'
 export hostname
 export rootpassword
@@ -87,9 +87,9 @@ mkdir -p $target/var/cache/apt/archives
 mkdir -p $target/usr/bin
 mkdir -p $homedir
 
-# multistrap
 echo "Multistrapping..."
 # XXX: DEATH: work around torrouter.torproject.org GPG key issue
+# XXX: see also auth=false in multistrap config files
 # multistrap -f $config -d $target
 multistrap --no-auth -f $config -d $target
 rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
@@ -98,14 +98,15 @@ rm -f $target/etc/apt/sources.list.d/multistrap-debian.list
 umount $target/var/cache/apt/
 
 # copy!
-echo "Copying the source directory to the FreedomBox root."
+echo "Copying the source directory to the torouter rootfs..."
 rsync -av $source/ $target
 
-# add projects to the image to make it a useful FreedomBox.
-bin/projects
+# add extra packages to the image
+bin/packages
 
 # torouter!
-echo "Copying torouter-specific files..."
+echo "Explicitly copying some torouter files..."
+# TODO: these should be redundant
 # Override the above stuff - we know better
 cp ../packages/torouter-prep/configs/interfaces $target/etc/network/interfaces
 # Stop the libertas module from loading

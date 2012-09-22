@@ -64,8 +64,8 @@ create-keys
 # wifi-ap-setup
 
 # the last things we do before quitting.
-tweak-kernel
+#tweak-kernel
 remove-self
 
-echo "Kernel flashed.  Rebooting."
-reboot
+#echo "Kernel flashed.  Rebooting."
+#reboot

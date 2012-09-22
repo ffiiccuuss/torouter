@@ -1,1 +1,3 @@
 - fix signing key for torrouter.torproject.org (should have a keyring .deb)
+- re-enable source builds in install.sh
+- random apt-get segfault issue

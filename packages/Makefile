@@ -2,7 +2,7 @@ debs: webdeb prepdeb mvdebs
 
 webdeb:
 	# By default we will but not sign for now
-	cd torouter-web && debuild --no-tgz-check -us -uc
+	#cd torouter-web && debuild --no-tgz-check -us -uc
 
 prepdeb:
 	# By default we will but not sign for now

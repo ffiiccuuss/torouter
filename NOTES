@@ -1,21 +1,20 @@
 system config files should live here in ./config
 system config scripts should live here in ./scripts
-    torouter-takeover
+    torouter_takeover.sh
         add torproject keys (prompt?)
         setup sources.list
         apt-get update
         install dependancies like tor and torouterui
         run torouter_preboot.sh
-    torouter-preboot
+        new ssh keys?
+    torouter_preboot.sh
         check that dependancies are installed (tor, torouterui, etc) or fail
-        copy/install all configuration files
-        install 
-        create users and groups
+        copy/install configuration files
         remove/disable unwanted packages
-        setup firstboot
-    torouter-firstboot (just generates ssh keys; could be done elsewhere?)
-    torouter-copy2internal (TODO)
-    torouter-setupuboot (TODO)
+        stop libertas module from loading
+        create users and groups
+    torouter_copy2internal.sh (TODO)
+    torouter_setupuboot.sh (TODO)
 
 torouter-prep contains all the above files
 

@@ -49,6 +49,10 @@ echo $hostname > $target/etc/hostname
 chown root:root $target/sbin/copy2dream
 chmod 744 $target/sbin/copy2dream
 
+# copy over install script
+cp bin/install.sh $target/
+chmod 744 $target/install.sh
+
 # prepare chroot package finalization
 cp bin/packages-chroot $target/
 
@@ -57,8 +61,6 @@ chmod 755 $target/install.sh
 cp /usr/bin/qemu-arm-static $target/usr/bin
 echo "Running install script from source/install.sh"
 chroot $target /install.sh
-echo "Running install script from bin/projects-chroot"
-chroot $target /packages-chroot
 
 # clean up.
 rm "${target}/packages-chroot"

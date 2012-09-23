@@ -25,6 +25,13 @@ cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
 # sshd may be left running by the postinst, clean that up
 /etc/init.d/ssh stop
 
+echo "Running install script from bin/projects-chroot"
+/packages-chroot
+
+# torouter setup
+echo "Running torouter_preboot.sh..."
+/usr/bin/torouter_preboot.sh
+
 # process installed kernel to create uImage, uInitrd, dtb
 #  using flash-kernel would be a good approach, except it fails in the cross
 #  build environment due to too many environment checks...
@@ -36,6 +43,7 @@ cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
 # emulated chroot environment, which means our root= on the kernel command
 # line is completely ignored!  repack the initrd to remove this evil...
 
+echo "Mangling kernel..."
 mkdir /tmp/initrd-repack
 (cd /tmp/initrd-repack ; \
     zcat /boot/initrd.img-3.2.0-3-kirkwood | cpio -i ; \
@@ -59,7 +67,7 @@ echo "Set root password to "$rootpassword
 echo root:$rootpassword | /usr/sbin/chpasswd
 
 # Create a default user
-echo "Creating fbx user, password: $userpassword"
+echo "Creating $user user, password: $userpassword"
 useradd $user
 echo $user:$userpassword | /usr/sbin/chpasswd
 

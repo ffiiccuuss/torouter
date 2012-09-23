@@ -104,14 +104,6 @@ rsync -av $source/ $target
 # add extra packages to the image
 bin/packages
 
-# torouter!
-echo "Explicitly copying some torouter files..."
-# TODO: these should be redundant
-# Override the above stuff - we know better
-cp ../packages/torouter-prep/configs/interfaces $target/etc/network/interfaces
-# Stop the libertas module from loading
-cp ../packages/torouter-prep/configs/modprobe.d-blacklist.conf $target/etc/modprobe.d/blacklist.conf
-
 # cleanup and finalize the image so it boots correctly.
 echo "Finalizing..."
 bin/finalize

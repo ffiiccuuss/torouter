@@ -24,15 +24,15 @@ apt-key add $config_dir/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.apt-key
 apt-key add $config_dir/047E6A24.asc
 
 # Set us to have a default host name and hosts file
-cp $config_dir/hostname /etc/hostname
-cp $config_dir/hosts /etc/hosts
+cp $config_dir/etc/hostname /etc/hostname
+cp $config_dir/etc/hosts /etc/hosts
 
 # We need to prep apt to understand that we want packages from other repos
 cp $config_dir/sources.list /etc/apt/sources.list
 
 # We're creating this file to ensure we get updates
-cp $config_dir/apt-preferences.d-backports /etc/apt/preferences.d/backports
-cp $config_dir/apt.conf /etc/apt/apt.conf
+cp $config_dir/etc/apt/apt-preferences.d/backports /etc/apt/preferences.d/backports
+cp $config_dir/etc/apt/apt.conf /etc/apt/apt.conf
 
 apt-get -y update
 
@@ -104,33 +104,33 @@ apt-get -y install unbound
 zcat $config_dir/armrc.sample.gz > ~$ADMINUSER/.armrc
 
 # Reconfigure /etc/inittab here
-cp $config_dir/inittab /etc/inittab
+cp $config_dir/etc/inittab /etc/inittab
 
 # Reconfigure fstab
-cp $config_dir/fstab /etc/fstab
+cp $config_dir/etc/fstab /etc/fstab
 
 # Configure the network
 # eth0 is our "internet" interface with a dhcp client
-cp $config_dir/interfaces /etc/network/interfaces
+cp $config_dir/etc/network/interfaces /etc/network/interfaces
 
 # Configure dnsmasq
-cp $config_dir/dnsmasq.conf /etc/dnsmasq.conf
+cp $config_dir/etc/dnsmasq.conf /etc/dnsmasq.conf
 
 # Configure ntp
-cp $config_dir/ntp.conf /etc/ntp.conf
-cp $config_dir/openntpd-default /etc/default/openntpd
+cp $config_dir/etc/ntp.conf /etc/ntp.conf
+cp $config_dir/etc/default/openntpd /etc/default/openntpd
 
 # Configure ssh
-cp $config_dir/sshd_config /etc/ssh/sshd_config
+cp $config_dir/etc/ssh/sshd_config /etc/ssh/sshd_config
 
 # XXX We should configure ufw here
 # XXX We should configure denyhosts
 
-cp $config_dir/torrc /etc/tor/torrc
-cp $config_dir/ttdnsd-default /etc/default/ttdnsd
+cp $config_dir/etc/tor/torrc /etc/tor/torrc
+cp $config_dir/etc/default/ttdnsd /etc/default/ttdnsd
 
 # Configure sshd
-cp $config_dir/sshd_config /etc/ssh/sshd_config
+cp $config_dir/etc/ssh/sshd_config /etc/ssh/sshd_config
 
 # Clean up our cache
 apt-get -f -y remove --purge polipo minissdpd
@@ -145,7 +145,7 @@ apt-get -y clean
 apt-get install -f
 
 ## Disable ipv6 support for now
-cp $config_dir/modprobe.d-blacklist.conf /etc/modprobe.d/blacklist.conf
+cp $config_dir/etc/modprobe.d/blacklist.conf /etc/modprobe.d/blacklist.conf
 # We don't need this if the ipv6 module is not loaded
 #echo net.ipv6.conf.all.disable_ipv6=1 > /etc/sysctl.d/disableipv6.conf
 ##

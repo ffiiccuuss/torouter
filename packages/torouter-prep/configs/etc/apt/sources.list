@@ -1,2 +1,11 @@
-deb http://http.debian.net/debian wheezy main
-deb-src http://http.debian.net/debian wheezy main
+# base debian packages
+deb [arch=armel] http://http.debian.net/debian/ wheezy main
+deb-src http://http.debian.net/debian/ wheezy main
+
+# torproject.org repositories
+deb [arch=armel] http://deb.torproject.org/torproject.org/ wheezy main
+deb-src http://deb.torproject.org/torproject.org/ wheezy main
+
+# torouter packages (temporary repository?)
+deb [arch=armel] http://torrouter.torproject.org/torrouter/ torrouter main
+deb-src http://torrouter.torproject.org/torrouter/ torrouter main

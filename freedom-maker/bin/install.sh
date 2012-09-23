@@ -22,10 +22,14 @@ cut -f 1 < /tmp/selections | cut -d ':' -f 1 > /tmp/packages
 # TODO: torouter
 #apt-get source --download-only `cat /tmp/packages`
 
+echo "Removing multistrap sources..."
+rm /etc/apt/sources.list.d/multistrap*.list
+apt-get update
+
 # sshd may be left running by the postinst, clean that up
 /etc/init.d/ssh stop
 
-echo "Running install script from bin/projects-chroot"
+echo "Running local package install script from bin/projects-chroot"
 /packages-chroot
 
 # torouter setup

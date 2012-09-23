@@ -7,4 +7,10 @@
 *.tmp
 *.old
 packages/packages-for-upload/*
-
+*.debhelper
+*.debhelper.log
+*.substvars
+packages/torouter-prep/debian/torouter-prep/
+packages/torouter-web/build/
+packages/torouter-web/debian/files
+packages/torouter-web/debian/torouter-tui/

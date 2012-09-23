@@ -35,11 +35,13 @@
 # We don't tolerate errors.
 set -e
 
-architecture=armel
+architecture='armel'
+kernelversion='3.2.0-3-kirkwood'
 if [ -n "$1" ]
 then
     architecture=$1
 fi
+export kernelversion
 
 config=multistrap-configs/torouter-$architecture.conf
 if [ -n "$2" ]

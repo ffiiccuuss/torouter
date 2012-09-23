@@ -14,7 +14,7 @@ export FK_MACHINE="Globalscale Technologies Dreamplug"
 # configure all packages unpacked earlier by multistrap
 dpkg --configure -a
 
-echo "Adding source packages to filesystem"
+echo "[NOT] Adding source packages to filesystem"
 dpkg --get-selections > /tmp/selections
 mkdir -p /sourcecode
 cd sourcecode
@@ -50,24 +50,24 @@ echo "Running torouter_preboot.sh..."
 echo "Mangling kernel..."
 mkdir /tmp/initrd-repack
 (cd /tmp/initrd-repack ; \
-    zcat /boot/initrd.img-3.2.0-3-kirkwood | cpio -i ; \
+    zcat /boot/initrd.img-$kernelversion | cpio -i ; \
     rm -f conf/param.conf ; \
     find . | cpio --quiet -o -H newc | \
-	gzip -9 > /boot/initrd.img-3.2.0-3-kirkwood )
+	gzip -9 > /boot/initrd.img-$kernelversion)
 rm -rf /tmp/initrd-repack
 
 (cd /boot ; \
-    cp /usr/lib/linux-image-3.2.0-3-kirkwood/kirkwood-dreamplug.dtb dtb ; \
-    cat vmlinuz-3.2.0-3-kirkwood dtb >> temp-kernel ; \
-    mkimage -A arm -O linux -T kernel -n 'Debian kernel 3.2.0-3-kirkwood' \
+    cp /usr/lib/linux-image-$kernelversion/kirkwood-dreamplug.dtb dtb ; \
+    cat vmlinuz-$kernelversion dtb >> temp-kernel ; \
+    mkimage -A arm -O linux -T kernel -n 'Debian kernel $kernelversion' \
 	-C none -a 0x8000 -e 0x8000 -d temp-kernel uImage ; \
     rm -f temp-kernel ; \
     mkimage -A arm -O linux -T ramdisk -C gzip -a 0x0 -e 0x0 \
-	-n 'Debian ramdisk 3.2.0-3-kirkwood' \
-	-d initrd.img-3.2.0-3-kirkwood uInitrd )
+	-n 'Debian ramdisk $kernelversion' \
+	-d initrd.img-$kernelversion uInitrd )
 
 # Establish an initial root password
-echo "Set root password to "$rootpassword
+echo "Set root password to $rootpassword"
 echo root:$rootpassword | /usr/sbin/chpasswd
 
 # Create a default user

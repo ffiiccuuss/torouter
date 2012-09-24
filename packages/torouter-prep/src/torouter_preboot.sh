@@ -22,10 +22,6 @@ cp $config_dir/etc/hosts /etc/hosts
 # We need to prep apt to understand that we want packages from other repos
 cp $config_dir/etc/apt/sources.list /etc/apt/sources.list
 
-# We're creating this file to ensure we get updates
-cp $config_dir/etc/apt/preferences.d/backports /etc/apt/preferences.d/backports
-#cp $config_dir/etc/apt/apt.conf /etc/apt/apt.conf
-
 # Reconfigure /etc/inittab here
 cp $config_dir/etc/inittab /etc/inittab
 

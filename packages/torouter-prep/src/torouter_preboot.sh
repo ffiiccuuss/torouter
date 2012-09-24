@@ -13,7 +13,7 @@ export TORADMINGROUP="debian-tor"
 
 # TODO: check that dependancies are already installed, or fail
 #   tor, torouterui, ttdnsd, etc
-apt-get --simulate install apt-utils tor torouterui ttdnsd
+# if [ `apt-get --simulate install apt-utils tor torouterui ttdnsd` ]
 
 # Set us to have a default host name and hosts file
 cp $config_dir/etc/hostname /etc/hostname

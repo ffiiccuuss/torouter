@@ -1,11 +1,10 @@
-#!/bin/bash -x
+#!/bin/sh
 
-export VERSION="0.1"
+# no errors
+set -x
 
 echo "This program will now reconfigure your Debian system into a Torouter"
 
-# For every file we touch, move it to the temp_dir and then tar it up in the end
-export temp_dir="`mktemp -d`"
 export config_dir="/usr/share/torouter-prep/example-configs/"
 
 # Add a user to administrate the Torouter later
@@ -13,9 +12,6 @@ export ADMINUSER="torouter"
 export ADMINGROUP="torouter"
 export TORADMINGROUP="debian-tor"
 
-# Install the Tor repo key
-# gpg --keyserver keys.gnupg.net --recv 886DDD89
-# gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
 # This is the main Tor repo apt pubkey
 apt-key add $config_dir/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.apt-key
 
@@ -23,158 +19,25 @@ apt-key add $config_dir/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.apt-key
 # freeze this repo and know what we want to do
 apt-key add $config_dir/047E6A24.asc
 
-# Set us to have a default host name and hosts file
-cp $config_dir/etc/hostname /etc/hostname
-cp $config_dir/etc/hosts /etc/hosts
-
 # We need to prep apt to understand that we want packages from other repos
 cp $config_dir/sources.list /etc/apt/sources.list
 
-# We're creating this file to ensure we get updates
-cp $config_dir/etc/apt/apt-preferences.d/backports /etc/apt/preferences.d/backports
-cp $config_dir/etc/apt/apt.conf /etc/apt/apt.conf
-
 apt-get -y update
 
-apt-get -y install apt-utils
+# add packages (hopefully many of these will already be installed)
+apt-get -y install apt-utils vim less screen lsof wireless-tools iputils-ping \
+  lsof net-tools tcptraceroute traceroute mtr-tiny uaputl uapevent denyhosts \
+  ufw openntpd tor tor-geoipdb libnatpmp-dev libnatpmp1 libminiupnpc-dev \
+  libminiupnpc5 tor-arm ttdnsd dnsmasq isc-dhcp-client unbound torouterui
 
-# Install a sane editor
-apt-get -y install vim
+# TODO: check if uap8xxx is existant; if not, try to install libertas_uap
+# drivers
 
-# install a sane pager
-apt-get -y install less
+# do the heavy lifting
+torouter_preboot.sh
 
-# Install screen
-apt-get -y install screen
+echo "Syncing filesystem just in case..."
+sync
 
-# Install a few networking tools
-apt-get -y install lsof wireless-tools iputils-ping \
-  lsof net-tools tcptraceroute traceroute mtr-tiny
+echo "Exiting torouter_config.sh!"
 
-# Install the weird wireless control for the DreamPlug
-apt-get install -y -t sid uaputl
-apt-get install -y -t sid uapevent
-
-# Install some other packages here:
-apt-get -y install denyhosts ufw
-
-# Allow us to set the clock:
-apt-get -y -t squeeze-backports install openntpd
-
-# Install Tor and deps from Debian experimental to get 0.2.2.x for ORPort auto:
-apt-get -y -t experimental install tor tor-geoipdb
-# To try the arm builds of 0.2.3.x do this:
-#apt-get -y -t torrouter install tor tor-geoipdb
-# To build a 0.2.3.x Tor:
-# apt-get source tor=0.2.3.1-alpha-1~~squeeze+1
-# Debuild here...
-
-# To build with natpmp support
-apt-get -y -t experimental install libnatpmp-dev
-apt-get -y -t experimental install libnatpmp1
-
-# To build with miniupnpc support
-apt-get -y -t squeeze-backports install libminiupnpc-dev
-apt-get -y -t squeeze-backports install libminiupnpc5
-
-# XXX
-# We want to apt-get source tor and build it for the 0.2.3.x branch
-#
-
-# Install a Tor controller:
-apt-get -y install tor-arm
-
-# Install the ttdnsd program:
-apt-get -y install ttdnsd
-
-# Install a normal dns cache for eth1
-apt-get -y install dnsmasq
-
-# install the best dhcp client we're gonna get in debian land
-apt-get -y install isc-dhcp-client
-
-# install our own real dns cache
-apt-get -y install unbound
-
-##
-## Configuration stage of the script
-##
-
-# Configure arm
-zcat $config_dir/armrc.sample.gz > ~$ADMINUSER/.armrc
-
-# Reconfigure /etc/inittab here
-cp $config_dir/etc/inittab /etc/inittab
-
-# Reconfigure fstab
-cp $config_dir/etc/fstab /etc/fstab
-
-# Configure the network
-# eth0 is our "internet" interface with a dhcp client
-cp $config_dir/etc/network/interfaces /etc/network/interfaces
-
-# Configure dnsmasq
-cp $config_dir/etc/dnsmasq.conf /etc/dnsmasq.conf
-
-# Configure ntp
-cp $config_dir/etc/ntp.conf /etc/ntp.conf
-cp $config_dir/etc/default/openntpd /etc/default/openntpd
-
-# Configure ssh
-cp $config_dir/etc/ssh/sshd_config /etc/ssh/sshd_config
-
-# XXX We should configure ufw here
-# XXX We should configure denyhosts
-
-cp $config_dir/etc/tor/torrc /etc/tor/torrc
-cp $config_dir/etc/default/ttdnsd /etc/default/ttdnsd
-
-# Configure sshd
-cp $config_dir/etc/ssh/sshd_config /etc/ssh/sshd_config
-
-# Clean up our cache
-apt-get -f -y remove --purge polipo minissdpd
-
-# Remove a bunch of stuff:
-apt-get -y remove exim4-base exim4-config exim4-daemon-light dbus
-
-#apt-get -y autoremove
-apt-get -y clean
-
-# Fixup apt if something goes wrong
-apt-get install -f
-
-## Disable ipv6 support for now
-cp $config_dir/etc/modprobe.d/blacklist.conf /etc/modprobe.d/blacklist.conf
-# We don't need this if the ipv6 module is not loaded
-#echo net.ipv6.conf.all.disable_ipv6=1 > /etc/sysctl.d/disableipv6.conf
-##
-## Restart the network here
-##
-
-ifup -a
-
-apt-get -y install unbound
-
-##
-## Restart services here
-##
-
-/etc/init.d/ssh restart
-/etc/init.d/tor restart
-/etc/init.d/ttdnsd restart
-
-addgroup $ADMINGROUP
-useradd -g $ADMINGROUP -G $TORADMINGROUP -s /bin/bash $ADMINUSER
-
-##
-## Add arm startup trick with cron for shared screen run as $ADMINUSER
-##
-crontab -u $ADMINUSER $config_dir/tor-arm-crontab
-
-##
-## Touch a stamp to show that we're now a Torouter
-##
-
-echo "torouter $VERSION" > /etc/torouter
-echo "You should reboot now to ensure that everything works as expected"

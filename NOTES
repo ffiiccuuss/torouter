@@ -1,6 +1,6 @@
 system config files should live here in ./config
 system config scripts should live here in ./scripts
-    torouter_takeover.sh
+    torouter_config.sh
         add torproject keys (prompt?)
         setup sources.list
         apt-get update
@@ -10,7 +10,6 @@ system config scripts should live here in ./scripts
             crontab
             uap8xxx
         run torouter_preboot.sh
-        new ssh keys?
     torouter_preboot.sh
         check that dependancies are installed (tor, torouterui, etc) or fail
         copy/install configuration files

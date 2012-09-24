@@ -1,8 +1,8 @@
 #!/bin/sh
 
-# try to install locally-sourced torouter .deb files
+echo "Installing extra/local override .deb files..."
 dpkg -i /tmp/dpkg/*.deb
 
-# try to install libertas_uap hack
-cd /tmp/uap_hack/dreamplug_libertas && ./install_$kernelversion.sh
+echo "Installing libertas_uap hack..."
+cd /tmp/uap_hack/dreamplug_libertas && ./install.sh $kernelversion
 

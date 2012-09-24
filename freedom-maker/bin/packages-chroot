@@ -4,5 +4,5 @@
 dpkg -i /tmp/dpkg/*.deb
 
 # try to install libertas_uap hack
-cd /tmp/uap_hack/dreamplug_libertas_$kernelversion && ./install.sh
+cd /tmp/uap_hack/dreamplug_libertas && ./install_$kernelversion.sh
 

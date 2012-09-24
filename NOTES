@@ -8,6 +8,7 @@ system config scripts should live here in ./scripts
             tor
             torouterui
             crontab
+            uap8xxx
         run torouter_preboot.sh
         new ssh keys?
     torouter_preboot.sh

@@ -4,7 +4,10 @@ system config scripts should live here in ./scripts
         add torproject keys (prompt?)
         setup sources.list
         apt-get update
-        install dependancies like tor and torouterui
+        install dependancies like: (some should be torouter-prep deps?)
+            tor
+            torouterui
+            crontab
         run torouter_preboot.sh
         new ssh keys?
     torouter_preboot.sh

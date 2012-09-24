@@ -123,7 +123,20 @@ functions as a USB serial console adapter).
 First, upgrade u-boot to a recent version (see directions in freedom-maker
 directory), then set the appropriate bootloader environment variables:
 
-    TODO: XXX:
+    baudrate=115200
+    bootargs=console=ttyS0,115200 root=/dev/sdc2 rootdelay=10
+    bootcmd=${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;
+    bootdelay=3
+    filesize=2982D0
+    stderr=serial
+    stdin=serial
+    stdout=serial
+    x_bootargs=console=ttyS0,115200
+    x_bootargs_root=root=/dev/sdc2 rootdelay=10
+    x_bootcmd_ethernet=ping 192.168.2.1
+    x_bootcmd_initrd=fatload usb 2:1 0x6900000 uInitrd
+    x_bootcmd_kernel=fatload usb 2:1 0x6400000 uImage
+    x_bootcmd_usb=usb start
 
 FYI, there are at least two variants of the DreamPlug hardware, with slightly
 differing chipsets.

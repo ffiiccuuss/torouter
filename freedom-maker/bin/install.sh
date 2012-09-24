@@ -75,6 +75,9 @@ echo "Creating $user user, password: $userpassword"
 useradd $user
 echo $user:$userpassword | /usr/sbin/chpasswd
 
+echo "Removing SSH server keys (will re-generate them on first boot)"
+rm -f /etc/ssh/ssh_host_*
+
 echo "Deleting this very same script"
 rm -f /install.sh
 

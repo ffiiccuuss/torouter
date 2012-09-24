@@ -67,4 +67,5 @@ po::powerokwait:/etc/init.d/powerfail stop
 #
 #T3:23:respawn:/sbin/mgetty -x0 -s 57600 ttyS3
 
-T0:2345:respawn:/sbin/getty -L ttyS0 115200 linux
+#T0:2345:respawn:/sbin/getty -L ttyS0 115200 linux
+T0:12345:respawn:/sbin/getty -L ttyS0 115200 vt100

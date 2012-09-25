@@ -48,6 +48,9 @@ cp $config_dir/etc/ssh/sshd_config /etc/ssh/sshd_config
 cp $config_dir/etc/tor/torrc /etc/tor/torrc
 cp $config_dir/etc/default/ttdnsd /etc/default/ttdnsd
 
+# install tor firewall helper
+install -o root -g root -m 750 $config_dir/sbin/tor-wireless-firewall.sh /usr/sbin/
+
 # Remove a bunch of stuff
 apt-get -f -y remove --purge polipo minissdpd
 apt-get -y remove exim4-base exim4-config exim4-daemon-light dbus
@@ -66,10 +69,10 @@ useradd -g $ADMINGROUP -G $TORADMINGROUP -s /bin/bash $ADMINUSER
 # TODO: $ADMINUSER passwd?
 
 # Configure arm
-zcat $config_dir/armrc.sample.gz > /home/$ADMINUSER/.armrc
+zcat $config_dir/tmp/armrc.sample.gz > /home/$ADMINUSER/.armrc
 
 ## Add arm startup trick with cron for shared screen run as $ADMINUSER
-crontab -u $ADMINUSER $config_dir/tor-arm-crontab
+crontab -u $ADMINUSER $config_dir/tmp/tor-arm-crontab
 
 ## Touch a stamp to show that we're now a Torouter
 echo "torouter $VERSION" > /etc/torouter

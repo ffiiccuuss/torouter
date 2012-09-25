@@ -13,14 +13,14 @@ export ADMINGROUP="torouter"
 export TORADMINGROUP="debian-tor"
 
 # This is the main Tor repo apt pubkey
-apt-key add $config_dir/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.apt-key
+apt-key add $config_dir/tmp/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.apt-key
 
 # This is the temp torrouter archive pubkey; this should be updated when we
 # freeze this repo and know what we want to do
-apt-key add $config_dir/047E6A24.asc
+apt-key add $config_dir/tmp/047E6A24.asc
 
 # We need to prep apt to understand that we want packages from other repos
-cp $config_dir/sources.list /etc/apt/sources.list
+cp $config_dir/etc/sources.list /etc/apt/sources.list
 
 apt-get -y update
 

@@ -178,3 +178,6 @@ ControlPort 9051
 ControlListenAddress 127.0.0.1:9051
 CookieAuthentication 1
 
+# On torouter, tor daemon should always be running, but defaults to disabled
+# until user enables it specifically through the web interface
+DisableNetwork 1

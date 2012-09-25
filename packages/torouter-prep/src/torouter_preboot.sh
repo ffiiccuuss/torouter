@@ -34,6 +34,8 @@ cp $config_dir/etc/network/interfaces /etc/network/interfaces
 
 # Configure dnsmasq
 cp $config_dir/etc/dnsmasq.conf /etc/dnsmasq.conf
+mkdir -p /etc/dnsmasq.d
+cp $config_dir/etc/dnsmasq.d/* /etc/dnsmasq.d/
 
 # Configure ntp
 cp $config_dir/etc/ntp.conf /etc/ntp.conf

@@ -70,6 +70,10 @@ addgroup $ADMINGROUP
 useradd -g $ADMINGROUP -G $TORADMINGROUP -s /bin/bash $ADMINUSER
 # TODO: $ADMINUSER passwd?
 
+# give Tor permission to modify it's own configuration
+chgrp $TORADMINGROUP /etc/tor/ /etc/tor/*
+chmod g+rw /etc/tor/ /etc/tor/*
+
 # Configure arm
 zcat $config_dir/tmp/armrc.sample.gz > /home/$ADMINUSER/.armrc
 

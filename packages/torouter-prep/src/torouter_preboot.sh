@@ -55,7 +55,7 @@ install -o root -g root -m 750 $config_dir/sbin/tor-wireless-firewall.sh /usr/sb
 
 # Remove a bunch of stuff
 apt-get -f -y remove --purge polipo minissdpd
-apt-get -y remove exim4-base exim4-config exim4-daemon-light dbus
+apt-get -y remove exim4-base exim4-config exim4-daemon-light dbus isc-dhcp-server
 
 # Clean up apt
 #apt-get -y autoremove

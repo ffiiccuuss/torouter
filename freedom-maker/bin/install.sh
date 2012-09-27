@@ -1,6 +1,9 @@
 echo "Preconfiguring dash - else dash and bash will be left in a broken state"
 /var/lib/dpkg/info/dash.preinst install
 
+kernelversion='3.2.0-3-kirkwood'
+export kernelversion
+
 # don't leave target image containing apt config of the build host
 echo "Configuring all packages"
 export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true
@@ -59,11 +62,11 @@ rm -rf /tmp/initrd-repack
 (cd /boot ; \
     cp /usr/lib/linux-image-$kernelversion/kirkwood-dreamplug.dtb dtb ; \
     cat vmlinuz-$kernelversion dtb >> temp-kernel ; \
-    mkimage -A arm -O linux -T kernel -n 'Debian kernel $kernelversion' \
+    mkimage -A arm -O linux -T kernel -n "Debian kernel $kernelversion" \
 	-C none -a 0x8000 -e 0x8000 -d temp-kernel uImage ; \
     rm -f temp-kernel ; \
     mkimage -A arm -O linux -T ramdisk -C gzip -a 0x0 -e 0x0 \
-	-n 'Debian ramdisk $kernelversion' \
+	-n "Debian ramdisk $kernelversion" \
 	-d initrd.img-$kernelversion uInitrd )
 
 # Establish an initial root password

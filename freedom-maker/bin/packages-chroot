@@ -4,5 +4,5 @@ echo "Installing extra/local override .deb files..."
 dpkg -i /tmp/dpkg/*.deb
 
 echo "Installing libertas_uap hack..."
-cd /tmp/uap_hack/dreamplug_libertas && ./install.sh $kernelversion
+cd /tmp/uap_hack/dreamplug_libertas && ./install.sh "3.2.0-3-kirkwood"
 

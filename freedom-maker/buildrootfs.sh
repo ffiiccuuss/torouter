@@ -101,9 +101,9 @@ umount $target/var/cache/apt/
 
 # copy!
 echo "Copying the source directory to the torouter rootfs..."
-rsync -av $source/ $target
+rsync -av --no-owner --no-group $source/ $target
 echo "Copying the torouter config directory to the torouter rootfs..."
-rsync -av ../configs/ $target
+rsync -av --no-owner --no-group ../configs/ $target
 
 # add extra packages to the image
 bin/packages

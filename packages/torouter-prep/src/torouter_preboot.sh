@@ -16,39 +16,43 @@ export TORADMINGROUP="debian-tor"
 # if [ `apt-get --simulate install apt-utils tor torouterui ttdnsd` ]
 
 # Set us to have a default host name and hosts file
-cp $config_dir/etc/hostname /etc/hostname
-cp $config_dir/etc/hosts /etc/hosts
+install -o root -g root -m 600 $config_dir/etc/hostname /etc/hostname
+install -o root -g root -m 600 $config_dir/etc/hosts /etc/hosts
 
 # We need to prep apt to understand that we want packages from other repos
-cp $config_dir/etc/apt/sources.list /etc/apt/sources.list
+install -o root -g root -m 600 $config_dir/etc/apt/sources.list /etc/apt/sources.list
 
 # Reconfigure /etc/inittab here
-cp $config_dir/etc/inittab /etc/inittab
+install -o root -g root -m 600 $config_dir/etc/inittab /etc/inittab
 
 # Reconfigure fstab
-cp $config_dir/etc/fstab /etc/fstab
+install -o root -g root -m 600 $config_dir/etc/fstab /etc/fstab
 
 # Configure the network
 # eth0 is our "internet" interface with a dhcp client
-cp $config_dir/etc/network/interfaces /etc/network/interfaces
+install -o root -g root -m 600 $config_dir/etc/network/interfaces /etc/network/interfaces
 
 # Configure dnsmasq
-cp $config_dir/etc/dnsmasq.conf /etc/dnsmasq.conf
+install -o root -g root -m 600 $config_dir/etc/dnsmasq.conf /etc/dnsmasq.conf
 mkdir -p /etc/dnsmasq.d
-cp $config_dir/etc/dnsmasq.d/* /etc/dnsmasq.d/
+chown root:root /etc/dnsmasq.d
+install -o root -g root -m 600 $config_dir/etc/dnsmasq.d/lan /etc/dnsmasq.d/lan
+install -o root -g root -m 600 $config_dir/etc/dnsmasq.d/wifi /etc/dnsmasq.d/wifi
 
 # Configure ntp
-cp $config_dir/etc/ntp.conf /etc/ntp.conf
-cp $config_dir/etc/default/openntpd /etc/default/openntpd
+install -o root -g root -m 600 $config_dir/etc/ntp.conf /etc/ntp.conf
+install -o root -g root -m 600 $config_dir/etc/default/openntpd /etc/default/openntpd
 
 # Configure ssh
-cp $config_dir/etc/ssh/sshd_config /etc/ssh/sshd_config
+install -o root -g root -m 600 $config_dir/etc/ssh/sshd_config /etc/ssh/sshd_config
 
 # XXX We should configure ufw here
 # XXX We should configure denyhosts
 
-cp $config_dir/etc/tor/torrc /etc/tor/torrc
-cp $config_dir/etc/default/ttdnsd /etc/default/ttdnsd
+# torrc permissions get overwritten below
+install -o root -g root -m 600 $config_dir/etc/tor/torrc /etc/tor/torrc
+
+install -o root -g root -m 600 $config_dir/etc/default/ttdnsd /etc/default/ttdnsd
 
 # install tor firewall helper
 install -o root -g root -m 750 $config_dir/sbin/tor-wireless-firewall.sh /usr/sbin/
@@ -63,7 +67,7 @@ apt-get install -f
 apt-get -y clean
 
 ## Disable ipv6 support for now
-cp $config_dir/etc/modprobe.d/blacklist.conf /etc/modprobe.d/blacklist.conf
+install -o root -g root -m 600 $config_dir/etc/modprobe.d/blacklist.conf /etc/modprobe.d/blacklist.conf
 
 ## add users and groups (ignore failures if groups already exist)
 addgroup $ADMINGROUP

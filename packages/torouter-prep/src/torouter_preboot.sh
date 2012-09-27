@@ -34,10 +34,13 @@ install -o root -g root -m 600 $config_dir/etc/network/interfaces /etc/network/i
 
 # Configure dnsmasq
 install -o root -g root -m 600 $config_dir/etc/dnsmasq.conf /etc/dnsmasq.conf
-mkdir -p /etc/dnsmasq.d
-chown root:root /etc/dnsmasq.d
-install -o root -g root -m 600 $config_dir/etc/dnsmasq.d/lan /etc/dnsmasq.d/lan
-install -o root -g root -m 600 $config_dir/etc/dnsmasq.d/wifi /etc/dnsmasq.d/wifi
+install -o root -g root -m 600 $config_dir/etc/dnsmasq_lan.conf /etc/dnsmasq_lan.conf
+install -o root -g root -m 600 $config_dir/etc/dnsmasq_wifi.conf /etc/dnsmasq_wifi.conf
+
+# new dns scheme
+install -o root -g root -m 600 $config_dir/etc/default/dnsmasq /etc/default/dnsmasq
+install -o root -g root -m 750 $config_dir/etc/init.d/dnsmasq_lan /etc/init.d/dnsmasq_lan
+install -o root -g root -m 750 $config_dir/etc/init.d/dnsmasq_wifi /etc/init.d/dnsmasq_wifi
 
 # Configure ntp
 install -o root -g root -m 600 $config_dir/etc/ntp.conf /etc/ntp.conf

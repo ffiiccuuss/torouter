@@ -8,7 +8,6 @@ iface lo inet loopback
 # The primary network interface
 auto eth0
 iface eth0 inet dhcp
-	post-up ifup uap0
 	post-down ifdown uap0
 
 auto eth1
@@ -17,10 +16,12 @@ iface eth1 inet static
 	netmask 255.255.255.0
 	network 10.23.42.0
 	broadcast 10.23.42.255
+    pre-up ip addr del 10.23.42.1/24 dev eth1 || true
 	post-up echo 1 > /proc/sys/net/ipv4/ip_forward
+	post-up /etc/init.d/dnsmasq_lan start
 	# this must happen after have brought up uap0 because it clears the nat tables
 	post-up iptables -t nat -A POSTROUTING -s 10.23.42.0/24 -o eth0 -j MASQUERADE
-	post-up /etc/init.d/dnsmasq restart
+	pre-down /etc/init.d/dnsmasq_lan stop
 
 # The magic Tor wireless network
 auto uap0
@@ -30,10 +31,14 @@ iface uap0 inet static
 	network 172.16.23.0
 	broadcast 172.16.23.255
 	pre-up ifconfig uap0 hw ether 00:66:66:66:66:66
-	post-up /etc/init.d/tor reload
-	post-up /etc/init.d/dnsmasq restart
+    pre-up ip addr del 172.16.23.1/24 dev uap0 || true
+	post-up /etc/init.d/tor start
+    post-up /etc/init.d/tor reload
+	post-up /etc/init.d/dnsmasq_wifi start
 	post-up /etc/init.d/ttdnsd restart
 	post-up /usr/bin/uaputl sys_cfg_ssid "torproject" || true
 	post-up /usr/bin/uaputl bss_start || true
 	post-up /usr/sbin/tor-wireless-firewall.sh || true
+    post-up /sbin/iptables -t nat -A OUTPUT -p tcp -d 10.192.0.0/10 -j REDIRECT --to-ports 9040 
 	pre-down /usr/bin/uaputl bss_stop || true
+	pre-down /etc/init.d/dnsmasq_wifi stop

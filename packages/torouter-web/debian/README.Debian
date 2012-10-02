@@ -1,8 +1,0 @@
-torouter for Debian
--------------------
-
-This is a package for Debian that converts a DreamPlug into a Torouter.
-
-It will configure the system without prompting the user for any input.
-
- -- Jacob Appelbaum <jacob@torproject.org>  Wed, 27 Jul 2011 09:51:21 -0400

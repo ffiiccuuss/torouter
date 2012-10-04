@@ -9,49 +9,56 @@ Project wiki page: https://trac.torproject.org/projects/tor/wiki/doc/Torouter
 = Repository Contents =
 
   README            this file
-  ./doc             (WIP) text file user and developer documentation
+  ./doc             user and developer documentation
   ./freedom-maker   firmware build scripts
   ./config          torouter configuration files
   ./packages        source for torouter-specific software packages
 
 = Installation and Build Instructions =
 
-There are several ways to get the debian-based torouter system running on a
+There are a couple ways to get the debian-based torouter system running on a
 DreamPlug device:
 
- - Flash a pre-built image onto an external USB stick
-
- - Flash a pre-built image onto an internal microSD card
-
- - Build and flash a new image from source
+ - Flash a pre-built image onto an SD card
 
  - Install the FreedomBox distribution or a "vanilla" debian, then run a
    torouter takeover/upgrade script
 
-For the later, see the "Building" section, then follow either the USB stick or
-microSD card directions.
+ - Build and flash a new image from source (perhaps with modifications)
+
+For the later, see the "Building" section, then follow the SD card directions.
 
 Regardless of the installation method and target, if the device is in a
 "factory fresh" state some bootloader preparation is required. See the
 "DreamPlug Preparation" section below; you will need serial console access to
-the DreamPlug, for example with the sometimes included GuruPlug JTAG device.
+the DreamPlug, for example with the (sometimes bundled) GuruPlug JTAG device.
 
-=== Flash Pre-Built Image to External USB stick ===
 
-TODO:
+=== Flash Pre-Built Image to an SD card ===
 
-    $ dd if=$IMGFILE of=$USBBASEDEV
+The command to write a raw image file $IMGFILE to an SD card connected via a
+USB adapter with block device $USBBASEDEV is: 
 
-=== Flash Pre-Built Image to Internal microSD card ===
+    $ dd bs=1M if=$IMGFILE of=$USBBASEDEV
 
-TODO:
+On linux you can try to figure out the $USBBASEDEV using the 'lsblk' command;
+you are looking for the base device (eg, /dev/sdb) not a partition (eg,
+/dev/sdb2). The SD care should not be mounted; use 'umount' to unmount the card
+if any partitions were mounted automatically for some reason.
 
-    $ dd if=$IMGFILE of=$USBBASEDEV
+        !!! Be careful not to overwrite the wrong base device !!!
 
-Mount the device, make changes to /etc/fstab. Also need to make changes to the
-initrd image?
+If the downloaded image name is "torouter-unstable-20120928-4GB-USB.img.gz" and
+the SD card block device is "/dev/sdb", first unzip the image file and dd it to
+the card:
 
-Make changes to u-boot configuration.
+    $ gunzip torouter-unstable-20120928-4GB-USB.img.gz
+    $ sudo dd bs=1M if=./torouter-unstable-20120928-4GB-USB.img of=/dev/sdb
+    $ sync      # doesn't hurt
+
+You can then remove the SD card, put it in your DreamPlug, and boot up. If this
+is the first boot with a factory-fresh DreamPlug, you'll need to configure
+u-boot; see below.
 
 === Torouter Takeover Script ===
 
@@ -96,23 +103,27 @@ Then enter the freedom-maker directory and run a build:
     $ sudo ./buildrootfs.sh
 
 If that was ultimately successful (you can ignore some apt warnings and errors
-that may scroll by), you now have a root filesystem ready to be copied to a USB
-stick. Insert a USB storage device and partition it to have a small (~80MB)
-boot partition followed by an ext3 root partition (1GB or so minimum). Make
-note of the boot and root partition nodes (eg, $BOOTNODE=/dev/sdc1 and
-$ROOTNODE=/dev/sdc2), then copy over the built distribution:
+that may scroll by), you now have a root filesystem ready to be copied to an SD
+card. Insert a card and partition it to have a small (~80MB)
+boot partition followed by an ext3 root partition (1GB or so minimum). You
+might want to take care and block align the partitions to get better write
+performance; see ./doc/sd_card.txt for more info. Make note of the boot and
+root partition nodes (eg, $BOOTNODE=/dev/sdc1 and $ROOTNODE=/dev/sdc2), then
+copy over the built distribution:
 
     $ sudo ./copy2card.sh $BOOTNODE $ROOTNODE
 
-If that was successful, contratulations, you now have a usable torouter thumb
-stic! You could skip ahead now to DreamPlug Perparation.
+If that was successful, contratulations, you now have a usable torouter SD
+card! You could skip ahead now to DreamPlug Perparation.
 
 If you want to dump your fresh un-booted image to a static .img file (which
-could be distributed to others or flashed to another stick quickly), run the
+could be distributed to others or flashed to another card quickly), run the
 copy2img.sh script with the "base" device of the thumbstick as an argument (eg,
 $STICKNODE=/dev/sdc):
 
     $ sudo ./copy2img.sh $STICKNODE
+
+And then rename the .img file produced to something more memorable.
 
 === DreamPlug Preparation ===
 
@@ -120,24 +131,33 @@ Prepping a vanilla DreamPlug device is somewhat involved and will require a
 access to the hardware serial console (eg, using a GuruPlug-branded JTAG device
 functions as a USB serial console adapter). 
 
-First, upgrade u-boot to a recent version (see directions in freedom-maker
-directory), then set the appropriate bootloader environment variables:
+The default SD card images include the u-boot firmware required to boot from
+the card. Insert a flashed SD card into the DreamPlug and connect to the
+powered-off DreamPlug using the serial converter with the screen command:
 
-    baudrate=115200
-    bootargs=console=ttyS0,115200 root=/dev/sdc2 rootdelay=10
-    bootcmd=${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;
-    bootdelay=3
-    filesize=2982D0
-    stderr=serial
-    stdin=serial
-    stdout=serial
-    x_bootargs=console=ttyS0,115200
-    x_bootargs_root=root=/dev/sdc2 rootdelay=10
-    x_bootcmd_ethernet=ping 192.168.2.1
-    x_bootcmd_initrd=fatload usb 2:1 0x6900000 uInitrd
-    x_bootcmd_kernel=fatload usb 2:1 0x6400000 uImage
-    x_bootcmd_usb=usb start
+    $ screen /dev/ttyUSB0 115200
 
-FYI, there are at least two variants of the DreamPlug hardware, with slightly
-differing chipsets.
+Power up the DreamPlug and quickly press enter in the screen session to
+interrupt boot. Then enter the following commands into the running u-boot
+session (change the last argument of the 'sf write' line, in hex, if the .kwb
+file size changes from exactly 196076 bytes):
+
+    usb start
+    fatload usb 1 0x6400000 uboot.2012.04.01-2_armel.kwb
+    sf probe 0
+    sf erase 0x0 0x80000
+    sf write 0x6400000 0x0 0x2fdec
+    setenv baudrate 115200
+    setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root} ${x_bootargs_console}; bootm 0x6400000 0x6900000;'
+    setenv x_bootargs_console 'ttyS0,115200'
+    setenv x_bootargs_root 'root=/dev/sdb2 rootdelay=10'
+    setenv x_bootcmd_initrd 'fatload usb 1:1 0x6900000 uInitrd'
+    setenv x_bootcmd_kernel 'fatload usb 1:1 0x6400000 uImage'
+    setenv x_bootcmd_usb 'usb start'
+    saveenv
+    reset
+
+The DreamPlug should now boot straight up as a torouter; connect via ethernet
+on the LAN port (eth1, "to the right") to access the web user interface and
+configure wifi.
 

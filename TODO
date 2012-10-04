@@ -1,3 +1,13 @@
 - fix signing key for torrouter.torproject.org (should have a keyring .deb)
 - re-enable source builds in install.sh
-- random apt-get segfault issue
+- fix/clarify current broken DNS situation
+- .onion addresses don't "just work" yet
+- clarify u-boot and bootloader configuration in docs
+- easy_setup is out of date
+- need a custom kernel build and package system for grsec etc patches
+- include updated u-boot image and env config in /boot
+- include "man" and documentation files
+- install/configure power management tools (to minimize consumption)
+
+might not fix:
+- kernel flashing code in install.sh is kernel-version specific

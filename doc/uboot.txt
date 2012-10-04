@@ -1,0 +1,45 @@
+
+Factory-configured DreamPlugs need their internal u-boot firmware updated and
+re-configured to boot from the SD card. 
+
+You may want to remove the internal microSD card for the sake of simplicity.
+This will result in u-boot and linux boot warnings, but these can be ignored.
+
+The desired u-boot configuration is: 
+
+    baudrate=115200
+    bootargs=console=ttyS0,115200 root=/dev/sdb2 rootdelay=10
+    bootcmd=${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root}; bootm 0x6400000 0x6900000;
+    x_bootargs=console=ttyS0,115200
+    x_bootargs_root=root=/dev/sdb2 rootdelay=10
+    x_bootcmd_initrd=fatload usb 1:1 0x6900000 uInitrd
+    x_bootcmd_kernel=fatload usb 1:1 0x6400000 uImage
+    x_bootcmd_usb=usb start
+
+HOWTO: flash and configure u-boot
+-----------------------------------
+
+The default SD card images include the u-boot firmware required to boot from
+the card. Insert a flashed SD card into the DreamPlug and connect with screen:
+
+    $ screen /dev/ttyUSB0 115200
+
+Power up the DreamPlug and quickly press enter in the screen session to
+interrupt boot. Then enter the following commands into the running u-boot
+session (change the last argument of the 'sf write' line, in hex, if the .kwb
+file size changes from exactly 196076 bytes):
+
+    usb start
+    fatload usb 1 0x6400000 uboot.2012.04.01-2_armel.kwb
+    sf probe 0
+    sf erase 0x0 0x80000
+    sf write 0x6400000 0x0 0x2fdec
+    setenv baudrate 115200
+    setenv bootcmd '${x_bootcmd_usb}; ${x_bootcmd_kernel}; ${x_bootcmd_initrd}; setenv bootargs ${x_bootargs} ${x_bootargs_root} ${x_bootargs_console}; bootm 0x6400000 0x6900000;'
+    setenv x_bootargs_console 'ttyS0,115200'
+    setenv x_bootargs_root 'root=/dev/sdb2 rootdelay=10'
+    setenv x_bootcmd_initrd 'fatload usb 1:1 0x6900000 uInitrd'
+    setenv x_bootcmd_kernel 'fatload usb 1:1 0x6400000 uImage'
+    setenv x_bootcmd_usb 'usb start'
+    saveenv
+    reset

@@ -1,0 +1,44 @@
+
+torouter is intended to boot and run from an SD. it could theoretically also
+run from an internal microSD card, a USB stick, or an eSATA drive, but
+specifying use of the SD card makes support, development, and documentation
+easier. the SD card can easily be popped out of the router and reflashed with a
+new image.
+
+The SD card should be at least 2GB in size and support reasonable read/write
+speeds, so probably a "class 6" quality card, which can be ##########
+
+you really should get a decent card: there can be an order of magnitude
+difference in performance between a cheap card and a fast card. 
+
+quick (but shady?) way to check read and write card performance on a
+high-performance machine: 
+
+    $ # unmount the card for read test
+    $ hdparm -t /dev/sdb    # iff /dev/sdb is the card
+    $ # mount the card for write test
+    $ dd count=10 bs=1M if=/dev/urandom of=/mnt/disktest
+
+
+HOWTO Prepare an SD Card for building (using debian)
+--------------------------------------------------------
+
+Insert a 4GB+ SD card into to your dev computer (using an adapter if necessary).
+
+Use lsblk to figure out which block device the card is (eg, /dev/sdc).
+
+Use gparted (as root) to create two logical paritions: first, a 128MB FAT32
+(msdos) boot partition, and second an ext4 root partition using the remainder
+of the space.
+
+Once the paritions are created, and you have confirmed that the partitions
+exist and are in the correct order (eg, small boot on /dev/sdc1, rootfs on
+/dev/sdc2), you are ready to copy over a fresh build using
+freedom-maker/copy2card.sh and then create an image file using
+freedom-maker/copy2img.sh.
+
+Optionally, follow these directions to generate block-aligned partitions for
+better write performance:
+
+http://linux-howto-guide.blogspot.de/2009/10/increase-usb-flash-drive-write-speed.html
+http://www.olpcnews.com/forum/index.php?topic=4993.0

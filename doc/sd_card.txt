@@ -6,7 +6,7 @@ easier. the SD card can easily be popped out of the router and reflashed with a
 new image.
 
 The SD card should be at least 2GB in size and support reasonable read/write
-speeds, so probably a "class 6" quality card, which can be ##########
+speeds, so probably a "class 6" quality card.
 
 you really should get a decent card: there can be an order of magnitude
 difference in performance between a cheap card and a fast card. 

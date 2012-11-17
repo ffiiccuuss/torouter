@@ -1,0 +1,13 @@
+
+from 2011:
+
+https://trac.torproject.org/projects/tor/ticket/3374
+
+I've now setup a Torouter that is pretty functional. I'll try to outline this at a high level and then show some service details that will make for interesting discussion.
+The Torouter I'm using is a DreamPlug with no modifications other than a stock Debian install - at the moment, I'm using the Marvell/DreamPlug stock kernel because it's a PITA to change it. I'm hopeful to change the kernel and to integrate grsec into the mix in the very near future. I need a different ticket for this work and will update this ticket when I have it. That will take a lot of work, I suspect.
+The router has two ethernet ports - the first one at the top of the device is eth0 and the second one near the bottom of the device is eth1. eth0 may be plugged into any network that connects to the internet. eth1 may be plugged into a switch or directly into another computer.
+When eth0 is brought up, tor (0.2.3.x) is started and configured as a bridge. Tor attempts to automatically punch a hole in any upstream NAT device with tor-fw-helper and does so with the NAT-PMP and UPnP client protocols. Additionally, when eth0 is brought up, uap0 is brought up as a wireless access point. 
+uap0 shares a normal 802.11 wireless network in infrastructure mode with the ESSID of "torproject" - It is an open wireless network that provides dhcp for any client that joins the network. It performs DNS resolution with Tor's DNSPort and all traffic is transparently routed to the internet through the Tor client on the Torouter itself. This network drops all non-TCP traffic and provides Tor access for devices such as the Chrome CR-48 or phones that do not yet support a native Tor client.
+eth1 provides normal internet access - it acts as a NAT behind eth0, it forwards packets, it offers dns resolution and of course dhcp service. A client or up to 244 clients (according to the current dhcp configuration) merely needs to plug into a switch fabric or directly into the Torouter to receive internet service.
+This setup seems to satisify nearly every requirement I've heard as something we'd desire. This device may be used as a home router (via eth1 and the NAT), a wifi access point, a Tor bridge and even a Tor relay if reconfigured. It requires no setup by the user and automatically enables all of these features by merely plugging into a single internet enabled ethernet cord and providing power.
+The specific services may need to be reconfigured or even re-written. However their specific purpose seems to be well defined - we simply need to think about the security boundaries and the scope of each thing we enable.

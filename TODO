@@ -1,5 +1,4 @@
 - fix signing key for torrouter.torproject.org (should have a keyring .deb)
-- re-enable source builds in install.sh
 - fix/clarify current broken DNS situation
 - .onion addresses don't "just work" yet
 - clarify u-boot and bootloader configuration in docs
@@ -11,3 +10,4 @@
 
 might not fix:
 - kernel flashing code in install.sh is kernel-version specific
+- re-enable source builds in install.sh

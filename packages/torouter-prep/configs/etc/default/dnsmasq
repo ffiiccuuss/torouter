@@ -1,2 +1,3 @@
 
+# NB: the "normal" dnsmasq daemon is also disabled via update-rc.d
 ENABLED=0

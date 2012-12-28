@@ -38,3 +38,7 @@ differences between takeover and .img build process:
 - don't need kernel re-pack with takeover
 - don't need fstab re-write with takeover
 
+---------
+See also:
+"Personal Onion Router To Assure Liberty", using OpenWRT on cheap hardware:
+https://github.com/grugq/portal

@@ -27,7 +27,7 @@ fi
 echo "mounting rootdev..."
 mount $ROOTDEV /mnt
 echo "rsyncing over rootfs"
-rsync -atv --progress --delete --exclude=boot build/armel/ /mnt/
+rsync -atv --progress --delete --exclude=boot build/armhf/ /mnt/
 echo "sync filesystems..."
 sync
 echo "un-mounting rootdev..."
@@ -36,7 +36,7 @@ umount /mnt
 echo "mounting bootdev..."
 mount $BOOTDEV /mnt
 echo "copying boot files..."
-cp -v build/armel/boot/* /mnt
+cp -v build/armhf/boot/* /mnt
 echo "sync filesystems..."
 sync
 echo "un-mounting bootdev..."

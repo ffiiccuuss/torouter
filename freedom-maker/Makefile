@@ -1,7 +1,7 @@
 # /usr/bin/make
 
 # armel amd64 i386
-ARCHITECTURE = armel
+ARCHITECTURE = armhf
 # dreamplug guruplug
 MACHINE = dreamplug
 # card usb
@@ -67,8 +67,8 @@ virtualbox-image: stamp-vbox-predepend
 
 # build the weekly test image
 weekly-image: image
-# if we aren't installing to an armel system, assume we need a bootloader.
-ifneq ($(ARCHITECTURE),armel)
+# if we aren't installing to an armhf system, assume we need a bootloader.
+ifneq ($(ARCHITECTURE),armhf)
 # also, try my best to protect users from themselves:
 ifneq ($(DEVICE),/dev/sda)
 	sudo grub-install $(DEVICE)

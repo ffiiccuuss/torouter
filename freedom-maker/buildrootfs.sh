@@ -35,8 +35,8 @@
 # We don't tolerate errors.
 set -e
 
-architecture='armel'
-kernelversion='3.2.0-3-kirkwood'
+architecture='armhf'
+kernelversion='3.2.0-4-mx5'
 if [ -n "$1" ]
 then
     architecture=$1
